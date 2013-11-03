@@ -53,3 +53,5 @@ Memory usage:
   32 868 bytes of readonly  code memory   rest = 229 276 bytes
      432 bytes of readonly  data memory
   35 825 bytes of readwrite data memory   rest =  13 327 bytes
+
+git now is used at home.
