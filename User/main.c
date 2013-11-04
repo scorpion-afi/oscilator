@@ -28,25 +28,24 @@ RCC_ClocksTypeDef kyky;
 RCC_GetClocksFreq( &kyky );
 */
 
+void adc_init( void );
+
 //точка входа
 //=======================================================================================
 int main()
-{  
-  InitLCD();
-  SendString( "Loading...", 5, 1 );
-  for( int i = 0; i < 3600000; i++ );
-  
-  //по требованиям FreeRTOS
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-
-  //создание задач, очередей и других обьектов ОС
-  if( Create_OS_Objects() != 0 )
+{ 
+  adc_init();
+  while(1)
   {
-    // запускаем планировщик
-    vTaskStartScheduler();
-  }  
+    ;
+  }
   
   return 0;
+}
+
+void adc_init( void )
+{
+  
 }
 
 // Создаем обьекты ОС
