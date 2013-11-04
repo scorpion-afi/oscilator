@@ -222,10 +222,10 @@ void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 
 // measuring
 
-#define FPS 10
+#define FPS 100
 
 //Обработчик прерываний от DMA1_Channel1 
-// will be called with 20 Hz frequence
+// will be called with 195 Hz frequence
 //==============================================================================
 void DMA1_Channel1_IRQHandler( void )     
 {
@@ -253,6 +253,7 @@ void DMA1_Channel1_IRQHandler( void )
   {       
     // sends a message to display results of measuring
     xQueueSendFromISR( queu_to_calc, (void *)&(sd_param.data), &rez );
+    counter = 0;
   }
   
   // sends a message to write data to sd card

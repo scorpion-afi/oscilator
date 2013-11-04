@@ -68,7 +68,7 @@
   void CalcSin(void);  
   void CalcPulse(void);
   void CalcExp(void);
-  void CalcTriangl(void);
+  void CalcSawtooth(void);
   void CalcGaus(void);
   void CalcUniform(void);
   void CalcZero(void);

@@ -9,7 +9,9 @@
 #define pi           3.14159265358979323846
 #define Nph_reg      4294967296        // 2^32-1 Разрядность регистра, хранящего шаг фазы.
 #define Fsamples     100000
-#define Lev_per_Volt 409.6   // 4096.0 / 10.0
+//#define Lev_per_Volt 409.6   // 4096.0 / 10.0
+//#define Lev_per_Volt 819   // 4096.0 / 10.0
+#define Lev_per_Volt 407   // 4096.0/5.0
 
 #define Duty_step  42949673        // 2^32 / 100 + 0.5
 #define Freq_koef  Nph_reg/Fsamples
@@ -24,7 +26,7 @@ void InitDAC_TIM_DMA(void)
   pDSPFunction[0] = CalcSin;
   pDSPFunction[1] = CalcPulse;
   pDSPFunction[2] = CalcExp;
-  pDSPFunction[3] = CalcTriangl;
+  pDSPFunction[3] = CalcSawtooth;
   pDSPFunction[4] = CalcGaus;
   pDSPFunction[5] = CalcUniform;
   pDSPFunction[6] = CalcZero;
@@ -105,8 +107,8 @@ void InitDAC_TIM_DMA(void)
   RCC->APB1ENR |= 4;
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
-  TIM_TimeBaseInitStruct.TIM_Period = 720;//1440;     // прерывания 25 000 раз в секунду(720)
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 3; // 4 - 1
+  TIM_TimeBaseInitStruct.TIM_Period = 720-1;//1440;     // прерывания 100 000 раз в секунду(720)
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 0; 
   TIM_TimeBaseInit(TIM4, &TIM_TimeBaseInitStruct);
   
   //выбираем в качестве источника внешнего тригера(TRGO) update event
@@ -200,7 +202,7 @@ void CalcSin(void)
     dPhase = 2*pi/(8192);  // а не (8192 - 1)
     
     Ampl = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    Offset = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5); 
     
     //программный "дисторшн" (от 0 до 4095 (уровни ЦАПа))
     for(int i = 0; i < 2049 /*sizeof(RAMBuff[CurDAC_Ch])*/; i++)
@@ -267,7 +269,8 @@ void CalcSin(void)
     {
       SUM -= 4096;
       
-      temp = 4095 - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      //temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
         
       if(CurDAC_Ch == 0)
       {
@@ -286,7 +289,8 @@ void CalcSin(void)
     {
       SUM = 8192 - SUM; //2048 - (SUM - 6144);
       
-      temp = 4095 - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      //temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
      
       if(CurDAC_Ch == 0)
       {
@@ -375,7 +379,7 @@ void CalcPulse(void)
     first_entry[CurDAC_Ch] = 1;
        
     Ampl = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    Offset = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
     duty_koef[CurDAC_Ch] = (uint32_t)(CurOscParam[CurDAC_Ch].duty * Duty_step + 0.5);
    
     //RAMBuff[CurDAC_Ch][0] хранит значение "пика" pulse сигнала
@@ -522,9 +526,9 @@ void CalcExp(void)
   }//вычисление отсчетов exp (будут положены в DAC_Buff)   
 }
 
-// вычисление отсчетов triangl
+// вычисление отсчетов Sawtooth
 //==============================================================================
-void CalcTriangl(void)
+void CalcSawtooth(void)
 {
   uint32_t SUM, *ptemp;
   uint16_t Ampl, Offset, value;
@@ -546,7 +550,7 @@ void CalcTriangl(void)
     first_entry[CurDAC_Ch] = 1;
        
     Ampl = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    Offset = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
     k = Ampl/2047.0;
     
     //программный "дисторшн" + заполнение таблицы triangl сигнала
@@ -611,7 +615,7 @@ void CalcGaus(void)
     first_entry[CurDAC_Ch] = 1;
        
     //Ampl[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset[CurDAC_Ch] = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    Offset[CurDAC_Ch] = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*Lev_per_Volt + 0.5);
                   
     R[CurDAC_Ch] = 1;   //anti-lock mechanism
   }

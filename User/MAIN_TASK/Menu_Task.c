@@ -65,10 +65,10 @@ char PrepareMesg( char Mesg, char *ButNum, char *EventType )
       
   // Channel select    0  
   // Signal Form       1 
-  // A/Disp            2
-  // O/m               3  
-  // F                 4
-  // D                 5
+  // Amplitude/Sigma   2
+  // Offset/Mean       3  
+  // Frequency         4
+  // Duty              5
   // +                 6
   // -                 7
   

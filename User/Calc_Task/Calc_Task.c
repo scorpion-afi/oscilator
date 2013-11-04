@@ -49,11 +49,11 @@ void vCalcTask( void* pvParameters )
     i_ch2 = ( ( adc_ptr[2]/4095.0f )* 3.3f )/2.0f;
     u_ch2 = ( ( adc_ptr[3]/4095.0f )* 3.3f );*/
     
-    i_ch1 = ( ( DAC_Buff[0]/4095.0f )* 3.3f )/2.0f; 
-    u_ch1 = ( ( DAC_Buff[1]/4095.0f )* 3.3f );
-    
-    i_ch2 = ( ( DAC_Buff[2]/4095.0f )* 3.3f )/2.0f;
-    u_ch2 = ( ( DAC_Buff[3]/4095.0f )* 3.3f );
+   i_ch1 = ( ( (DAC_Buff[0]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f; 
+   u_ch1 = ( ( (DAC_Buff[1]&0x0000FFFF)/4095.0f )* 3.3f );
+ 
+    i_ch2 = ( ( (DAC_Buff[2]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f;
+    u_ch2 = ( ( (DAC_Buff[3]&0x0000FFFF)/4095.0f )* 3.3f );
    
     // this function will have shown result of measuring:
     // power, current and voltage for two channels

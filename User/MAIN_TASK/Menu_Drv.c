@@ -11,9 +11,9 @@
   char SigName_0[] = "SF:sin";
   char SigName_1[] = "SF:pulse";
   char SigName_2[] = "SF:exp";
-  char SigName_3[] = "SF:triang";
-  char SigName_4[] = "SF:gaus";
-  char SigName_5[] = "SF:unifor";
+  char SigName_3[] = "SF:sawtoo";
+  char SigName_4[] = "SF:norm";
+  char SigName_5[] = "SF:unifrm";
   
   char Acronym_A[] = "A = ";
   char Acronym_O[] = "O = ";
@@ -45,9 +45,8 @@
 //==============================================================================
 void InitView(void)
 {    
-  //0 - sin, 1 - pulse, 2 - inv_pulse, 3 - triangl, 4 - gaus noise , 5 - uniform noise
-  // 0 - A, 1 - O, 2 - F, 3 - D
-  
+  //0 - sin, 1 - pulse, 2 - exp, 3 - sawtooth, 4 - norm noise , 5 - uniform noise
+  // 0 - A(D), 1 - O(M), 2 - F, 3 - D  
   CurChannel = 0;
   EditMode = 0;
   is_meas_mode = 1;
@@ -55,16 +54,17 @@ void InitView(void)
 //Channel 1 
   Channel[0].pos_x = 0;
   Channel[0].CurSigForm  = 1;
+  Channel[0].isOn = 1;
  
   //SignalParam 0  sin
   Channel[0].SignalParam[0].pname = SigName_0; 
   Channel[0].SignalParam[0].name_pos_y = 1;
   
-  //A
-  Channel[0].SignalParam[0].Param[0].min = 0.0f;   
-  Channel[0].SignalParam[0].Param[0].max = 5.0f;   
-  Channel[0].SignalParam[0].Param[0].cur = 3.5f;
-  Channel[0].SignalParam[0].Param[0].step = 0.1f;
+  //Amplitude
+  Channel[0].SignalParam[0].Param[0].min = 0.0;   
+  Channel[0].SignalParam[0].Param[0].max = 5.0;   
+  Channel[0].SignalParam[0].Param[0].cur = 2.0;
+  Channel[0].SignalParam[0].Param[0].step = 0.1;
   Channel[0].SignalParam[0].Param[0].pacronym = Acronym_A;
   Channel[0].SignalParam[0].Param[0].punit = Unit_B;
   Channel[0].SignalParam[0].Param[0].bg_pos_x  = 4;
@@ -77,10 +77,10 @@ void InitView(void)
   Channel[0].SignalParam[0].Param[0].numDig = 2;
   Channel[0].SignalParam[0].Param[0].isFract = 1;
     
-  //O 
-  Channel[0].SignalParam[0].Param[1].min = -5.0f;   
-  Channel[0].SignalParam[0].Param[1].max = 5.0f;   
-  Channel[0].SignalParam[0].Param[1].cur = -0.1f;   
+  //Offset
+  Channel[0].SignalParam[0].Param[1].min = 0.0;   
+  Channel[0].SignalParam[0].Param[1].max = 5.0;   
+  Channel[0].SignalParam[0].Param[1].cur = 2.0;   
   Channel[0].SignalParam[0].Param[1].step = 0.1;
   Channel[0].SignalParam[0].Param[1].pacronym = Acronym_O;
   Channel[0].SignalParam[0].Param[1].punit = Unit_B;
@@ -94,10 +94,10 @@ void InitView(void)
   Channel[0].SignalParam[0].Param[1].numDig = 2;
   Channel[0].SignalParam[0].Param[1].isFract = 1;
   
-  //F
-  Channel[0].SignalParam[0].Param[2].min = 0.0;   
-  Channel[0].SignalParam[0].Param[2].max = 125000.0;   
-  Channel[0].SignalParam[0].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[0].SignalParam[0].Param[2].min = 0.1;   
+  Channel[0].SignalParam[0].Param[2].max = 10000.0;   
+  Channel[0].SignalParam[0].Param[2].cur = 0.0;   
   Channel[0].SignalParam[0].Param[2].step = 1.0;
   Channel[0].SignalParam[0].Param[2].pacronym = Acronym_F;
   Channel[0].SignalParam[0].Param[2].punit = Unit_Hz;
@@ -111,7 +111,7 @@ void InitView(void)
   Channel[0].SignalParam[0].Param[2].numDig = 6;
   Channel[0].SignalParam[0].Param[2].isFract = 0;
 
-  //D
+  //Duty
   Channel[0].SignalParam[0].Param[3].isAvailable = 0;
   Channel[0].SignalParam[0].Param[3].isVisible = 0;
 
@@ -119,10 +119,10 @@ void InitView(void)
   Channel[0].SignalParam[1].pname = SigName_1;
   Channel[0].SignalParam[1].name_pos_y = 1;
   
-  //A
+  //Amplitude
   Channel[0].SignalParam[1].Param[0].min = 0.0;
   Channel[0].SignalParam[1].Param[0].max = 5.0;
-  Channel[0].SignalParam[1].Param[0].cur = 3.5;   
+  Channel[0].SignalParam[1].Param[0].cur = 2.0;   
   Channel[0].SignalParam[1].Param[0].step = 0.1;
   Channel[0].SignalParam[1].Param[0].pacronym = Acronym_A;
   Channel[0].SignalParam[1].Param[0].punit = Unit_B;
@@ -136,10 +136,10 @@ void InitView(void)
   Channel[0].SignalParam[1].Param[0].numDig = 2;
   Channel[0].SignalParam[1].Param[0].isFract = 1;
    
-  //O 
-  Channel[0].SignalParam[1].Param[1].min = -5.0;
+  //Offset
+  Channel[0].SignalParam[1].Param[1].min = 0.0;
   Channel[0].SignalParam[1].Param[1].max = 5.0;
-  Channel[0].SignalParam[1].Param[1].cur = -0.1;   
+  Channel[0].SignalParam[1].Param[1].cur = 0.0;   
   Channel[0].SignalParam[1].Param[1].step = 0.1;
   Channel[0].SignalParam[1].Param[1].pacronym = Acronym_O;
   Channel[0].SignalParam[1].Param[1].punit = Unit_B;
@@ -153,10 +153,10 @@ void InitView(void)
   Channel[0].SignalParam[1].Param[1].numDig = 2;
   Channel[0].SignalParam[1].Param[1].isFract = 1;
    
-  //F 
-  Channel[0].SignalParam[1].Param[2].min = 0.0;
-  Channel[0].SignalParam[1].Param[2].max = 125000.0;   
-  Channel[0].SignalParam[1].Param[2].cur = 2.0;   
+  //Frequency
+  Channel[0].SignalParam[1].Param[2].min = 0.1;
+  Channel[0].SignalParam[1].Param[2].max = 10000.0;   
+  Channel[0].SignalParam[1].Param[2].cur = 10000.0;   
   Channel[0].SignalParam[1].Param[2].step = 1.0;
   Channel[0].SignalParam[1].Param[2].pacronym = Acronym_F;
   Channel[0].SignalParam[1].Param[2].punit = Unit_Hz;
@@ -170,10 +170,10 @@ void InitView(void)
   Channel[0].SignalParam[1].Param[2].numDig = 6;
   Channel[0].SignalParam[1].Param[2].isFract = 0;
 
-  //D 
-  Channel[0].SignalParam[1].Param[3].min = 0.0;
+  //Duty
+  Channel[0].SignalParam[1].Param[3].min = 20;
   Channel[0].SignalParam[1].Param[3].max = 100.0; 
-  Channel[0].SignalParam[1].Param[3].cur = 45;   
+  Channel[0].SignalParam[1].Param[3].cur = 30;   
   Channel[0].SignalParam[1].Param[3].step = 1; 
   Channel[0].SignalParam[1].Param[3].pacronym = Acronym_D;
   Channel[0].SignalParam[1].Param[3].punit = Unit_percent;
@@ -187,14 +187,14 @@ void InitView(void)
   Channel[0].SignalParam[1].Param[3].numDig = 3;
   Channel[0].SignalParam[1].Param[3].isFract = 0;
    
-  //SignalParam 2  inv_pulse
+  //SignalParam 2  exp
   Channel[0].SignalParam[2].pname = SigName_2;
   Channel[0].SignalParam[2].name_pos_y = 1;
   
-  //A
-  Channel[0].SignalParam[2].Param[0].min = 0.0;
+  //Amplitude
+  Channel[0].SignalParam[2].Param[0].min = 0.1;
   Channel[0].SignalParam[2].Param[0].max = 5.0;
-  Channel[0].SignalParam[2].Param[0].cur = 3.5;   
+  Channel[0].SignalParam[2].Param[0].cur = 1.0;   
   Channel[0].SignalParam[2].Param[0].step = 0.1;
   Channel[0].SignalParam[2].Param[0].pacronym = Acronym_A;
   Channel[0].SignalParam[2].Param[0].punit = Unit_B;
@@ -208,10 +208,10 @@ void InitView(void)
   Channel[0].SignalParam[2].Param[0].numDig = 2;
   Channel[0].SignalParam[2].Param[0].isFract = 1;
    
-  //O 
-  Channel[0].SignalParam[2].Param[1].min = -5.0;
-  Channel[0].SignalParam[2].Param[1].max = 5.0;
-  Channel[0].SignalParam[2].Param[1].cur = -0.1;   
+  //Offset
+  Channel[0].SignalParam[2].Param[1].min = 0.0;
+  Channel[0].SignalParam[2].Param[1].max = 4.9;
+  Channel[0].SignalParam[2].Param[1].cur = 1.0;   
   Channel[0].SignalParam[2].Param[1].step = 0.1;
   Channel[0].SignalParam[2].Param[1].pacronym = Acronym_O;
   Channel[0].SignalParam[2].Param[1].punit = Unit_B;
@@ -225,10 +225,10 @@ void InitView(void)
   Channel[0].SignalParam[2].Param[1].numDig = 2;
   Channel[0].SignalParam[2].Param[1].isFract = 1;
    
-  //F 
-  Channel[0].SignalParam[2].Param[2].min = 0.0;
-  Channel[0].SignalParam[2].Param[2].max = 125000.0;   
-  Channel[0].SignalParam[2].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[0].SignalParam[2].Param[2].min = 0.1;
+  Channel[0].SignalParam[2].Param[2].max = 10000.0;   
+  Channel[0].SignalParam[2].Param[2].cur = 1.0;   
   Channel[0].SignalParam[2].Param[2].step = 1.0;
   Channel[0].SignalParam[2].Param[2].pacronym = Acronym_F;
   Channel[0].SignalParam[2].Param[2].punit = Unit_Hz;
@@ -242,7 +242,7 @@ void InitView(void)
   Channel[0].SignalParam[2].Param[2].numDig = 6;
   Channel[0].SignalParam[2].Param[2].isFract = 0;
 
-  //D 
+  //Duty
   Channel[0].SignalParam[2].Param[3].min = 0.0;
   Channel[0].SignalParam[2].Param[3].max = 100.0; 
   Channel[0].SignalParam[2].Param[3].cur = 45;   
@@ -259,14 +259,14 @@ void InitView(void)
   Channel[0].SignalParam[2].Param[3].numDig = 3;
   Channel[0].SignalParam[2].Param[3].isFract = 0;
    
-  //SignalParam 3  triangl
+  //SignalParam 3  sawtooth
   Channel[0].SignalParam[3].pname = SigName_3;
   Channel[0].SignalParam[3].name_pos_y = 1;
   
-  //A
+  //Amplitude
   Channel[0].SignalParam[3].Param[0].min = 0.0;
   Channel[0].SignalParam[3].Param[0].max = 5.0;
-  Channel[0].SignalParam[3].Param[0].cur = 3.5;   
+  Channel[0].SignalParam[3].Param[0].cur = 1.5;   
   Channel[0].SignalParam[3].Param[0].step = 0.1;
   Channel[0].SignalParam[3].Param[0].pacronym = Acronym_A;
   Channel[0].SignalParam[3].Param[0].punit = Unit_B;
@@ -280,10 +280,10 @@ void InitView(void)
   Channel[0].SignalParam[3].Param[0].numDig = 2;
   Channel[0].SignalParam[3].Param[0].isFract = 1;
    
-  //O 
-  Channel[0].SignalParam[3].Param[1].min = -5.0;
+  //Offset
+  Channel[0].SignalParam[3].Param[1].min = 0.0;
   Channel[0].SignalParam[3].Param[1].max = 5.0;
-  Channel[0].SignalParam[3].Param[1].cur = -0.1;   
+  Channel[0].SignalParam[3].Param[1].cur = 2.0;   
   Channel[0].SignalParam[3].Param[1].step = 0.1;
   Channel[0].SignalParam[3].Param[1].pacronym = Acronym_O;
   Channel[0].SignalParam[3].Param[1].punit = Unit_B;
@@ -297,10 +297,10 @@ void InitView(void)
   Channel[0].SignalParam[3].Param[1].numDig = 2;
   Channel[0].SignalParam[3].Param[1].isFract = 1;
    
-  //F 
-  Channel[0].SignalParam[3].Param[2].min = 0.0;
-  Channel[0].SignalParam[3].Param[2].max = 125000.0;   
-  Channel[0].SignalParam[3].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[0].SignalParam[3].Param[2].min = 0.1;
+  Channel[0].SignalParam[3].Param[2].max = 10000.0;   
+  Channel[0].SignalParam[3].Param[2].cur = 0;   
   Channel[0].SignalParam[3].Param[2].step = 1.0;
   Channel[0].SignalParam[3].Param[2].pacronym = Acronym_F;
   Channel[0].SignalParam[3].Param[2].punit = Unit_Hz;
@@ -314,15 +314,15 @@ void InitView(void)
   Channel[0].SignalParam[3].Param[2].numDig = 6;
   Channel[0].SignalParam[3].Param[2].isFract = 0;
  
-  //D
+  //Duty
   Channel[0].SignalParam[3].Param[3].isAvailable = 0;
   Channel[0].SignalParam[3].Param[3].isVisible = 0;
    
-  //SignalParam 4  gaus noise
+  //SignalParam 4  gaussian noise
   Channel[0].SignalParam[4].pname = SigName_4;
   Channel[0].SignalParam[4].name_pos_y = 1;
 
-  //m 
+  //Mean
   Channel[0].SignalParam[4].Param[4].min = -5.0;
   Channel[0].SignalParam[4].Param[4].max = 5.0;
   Channel[0].SignalParam[4].Param[4].cur = -0.5;   
@@ -339,7 +339,7 @@ void InitView(void)
   Channel[0].SignalParam[4].Param[4].numDig = 2;
   Channel[0].SignalParam[4].Param[4].isFract = 1;
 
-  //var
+  //Variance (Standard Deviation)
   Channel[0].SignalParam[4].Param[5].min = 0.0;
   Channel[0].SignalParam[4].Param[5].max = 5.0;
   Channel[0].SignalParam[4].Param[5].cur = 1.5;   
@@ -360,7 +360,7 @@ void InitView(void)
   Channel[0].SignalParam[5].pname = SigName_5;
   Channel[0].SignalParam[5].name_pos_y = 1;
   
-  //m 
+  //Mean
   Channel[0].SignalParam[5].Param[4].min = -5.0;
   Channel[0].SignalParam[5].Param[4].max = 5.0;
   Channel[0].SignalParam[5].Param[4].cur = -0.5;   
@@ -377,7 +377,7 @@ void InitView(void)
   Channel[0].SignalParam[5].Param[4].numDig = 2;
   Channel[0].SignalParam[5].Param[4].isFract = 1;
 
-  //var
+  //Variance (Standard Deviation)
   Channel[0].SignalParam[5].Param[5].min = 0.0;
   Channel[0].SignalParam[5].Param[5].max = 5.0;
   Channel[0].SignalParam[5].Param[5].cur = 1.5;   
@@ -397,13 +397,14 @@ void InitView(void)
 //Channel 2 
   
   Channel[1].pos_x = 11;
-  Channel[1].CurSigForm  = 2;
+  Channel[1].CurSigForm  = 3;
+  Channel[1].isOn = 1;
  
   //SignalParam 0  sin
   Channel[1].SignalParam[0].pname = SigName_0; 
   Channel[1].SignalParam[0].name_pos_y = 1;
   
-  //A
+  //Amplitude
   Channel[1].SignalParam[0].Param[0].min = 0.0;   
   Channel[1].SignalParam[0].Param[0].max = 5.0;   
   Channel[1].SignalParam[0].Param[0].cur = 3.5;
@@ -420,10 +421,10 @@ void InitView(void)
   Channel[1].SignalParam[0].Param[0].numDig = 2;
   Channel[1].SignalParam[0].Param[0].isFract = 1;
     
-  //O 
-  Channel[1].SignalParam[0].Param[1].min = -5.0;   
+  //Offset
+  Channel[1].SignalParam[0].Param[1].min = 0.0;   
   Channel[1].SignalParam[0].Param[1].max = 5.0;   
-  Channel[1].SignalParam[0].Param[1].cur = -0.1;   
+ Channel[1].SignalParam[0].Param[1].cur = 3.0;   
   Channel[1].SignalParam[0].Param[1].step = 0.1;
   Channel[1].SignalParam[0].Param[1].pacronym = Acronym_O;
   Channel[1].SignalParam[0].Param[1].punit = Unit_B;
@@ -437,10 +438,10 @@ void InitView(void)
   Channel[1].SignalParam[0].Param[1].numDig = 2;
   Channel[1].SignalParam[0].Param[1].isFract = 1;
   
-  //F
-  Channel[1].SignalParam[0].Param[2].min = 0.0;   
-  Channel[1].SignalParam[0].Param[2].max = 125000.0;   
-  Channel[1].SignalParam[0].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[1].SignalParam[0].Param[2].min = 0.1;   
+  Channel[1].SignalParam[0].Param[2].max = 10000.0;   
+  Channel[1].SignalParam[0].Param[2].cur = 100.0;   
   Channel[1].SignalParam[0].Param[2].step = 1.0;
   Channel[1].SignalParam[0].Param[2].pacronym = Acronym_F;
   Channel[1].SignalParam[0].Param[2].punit = Unit_Hz;
@@ -454,7 +455,7 @@ void InitView(void)
   Channel[1].SignalParam[0].Param[2].numDig = 6;
   Channel[1].SignalParam[0].Param[2].isFract = 0;
 
-  //D
+  //Duty
   Channel[1].SignalParam[0].Param[3].isAvailable = 0;
   Channel[1].SignalParam[0].Param[3].isVisible = 0;
 
@@ -462,10 +463,10 @@ void InitView(void)
   Channel[1].SignalParam[1].pname = SigName_1;
   Channel[1].SignalParam[1].name_pos_y = 1;
   
-  //A
+  //Amplitude
   Channel[1].SignalParam[1].Param[0].min = 0.0;
   Channel[1].SignalParam[1].Param[0].max = 5.0;
-  Channel[1].SignalParam[1].Param[0].cur = 3.5;   
+  Channel[1].SignalParam[1].Param[0].cur = 1.0;   
   Channel[1].SignalParam[1].Param[0].step = 0.1;
   Channel[1].SignalParam[1].Param[0].pacronym = Acronym_A;
   Channel[1].SignalParam[1].Param[0].punit = Unit_B;
@@ -479,10 +480,10 @@ void InitView(void)
   Channel[1].SignalParam[1].Param[0].numDig = 2;
   Channel[1].SignalParam[1].Param[0].isFract = 1;
    
-  //O 
-  Channel[1].SignalParam[1].Param[1].min = -5.0;
+  //Offset
+  Channel[1].SignalParam[1].Param[1].min = 0.0;
   Channel[1].SignalParam[1].Param[1].max = 5.0;
-  Channel[1].SignalParam[1].Param[1].cur = -0.1;   
+  Channel[1].SignalParam[1].Param[1].cur = 2.0;   
   Channel[1].SignalParam[1].Param[1].step = 0.1;
   Channel[1].SignalParam[1].Param[1].pacronym = Acronym_O;
   Channel[1].SignalParam[1].Param[1].punit = Unit_B;
@@ -496,10 +497,10 @@ void InitView(void)
   Channel[1].SignalParam[1].Param[1].numDig = 2;
   Channel[1].SignalParam[1].Param[1].isFract = 1;
    
-  //F 
-  Channel[1].SignalParam[1].Param[2].min = 0.0;
-  Channel[1].SignalParam[1].Param[2].max = 125000.0;   
-  Channel[1].SignalParam[1].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[1].SignalParam[1].Param[2].min = 0.1;
+  Channel[1].SignalParam[1].Param[2].max = 10000.0;   
+  Channel[1].SignalParam[1].Param[2].cur = 0.1;   
   Channel[1].SignalParam[1].Param[2].step = 1.0;
   Channel[1].SignalParam[1].Param[2].pacronym = Acronym_F;
   Channel[1].SignalParam[1].Param[2].punit = Unit_Hz;
@@ -513,10 +514,10 @@ void InitView(void)
   Channel[1].SignalParam[1].Param[2].numDig = 6;
   Channel[1].SignalParam[1].Param[2].isFract = 0;
 
-  //D 
-  Channel[1].SignalParam[1].Param[3].min = 0.0;
+  //Duty
+  Channel[1].SignalParam[1].Param[3].min = 20;
   Channel[1].SignalParam[1].Param[3].max = 100.0; 
-  Channel[1].SignalParam[1].Param[3].cur = 45;   
+  Channel[1].SignalParam[1].Param[3].cur = 50;   
   Channel[1].SignalParam[1].Param[3].step = 1; 
   Channel[1].SignalParam[1].Param[3].pacronym = Acronym_D;
   Channel[1].SignalParam[1].Param[3].punit = Unit_percent;
@@ -534,10 +535,10 @@ void InitView(void)
   Channel[1].SignalParam[2].pname = SigName_2;
   Channel[1].SignalParam[2].name_pos_y = 1;
   
-  //A
-  Channel[1].SignalParam[2].Param[0].min = 0.0;
+  //Amplitude
+  Channel[1].SignalParam[2].Param[0].min = 0.1;
   Channel[1].SignalParam[2].Param[0].max = 5.0;
-  Channel[1].SignalParam[2].Param[0].cur = 3.5;   
+  Channel[1].SignalParam[2].Param[0].cur = 1.0;   
   Channel[1].SignalParam[2].Param[0].step = 0.1;
   Channel[1].SignalParam[2].Param[0].pacronym = Acronym_A;
   Channel[1].SignalParam[2].Param[0].punit = Unit_B;
@@ -551,10 +552,10 @@ void InitView(void)
   Channel[1].SignalParam[2].Param[0].numDig = 2;
   Channel[1].SignalParam[2].Param[0].isFract = 1;
    
-  //O 
-  Channel[1].SignalParam[2].Param[1].min = -5.0;
-  Channel[1].SignalParam[2].Param[1].max = 5.0;
-  Channel[1].SignalParam[2].Param[1].cur = -0.1;   
+  //Offset
+  Channel[1].SignalParam[2].Param[1].min = 0.0;
+  Channel[1].SignalParam[2].Param[1].max = 4.9;
+  Channel[1].SignalParam[2].Param[1].cur = 1.0;   
   Channel[1].SignalParam[2].Param[1].step = 0.1;
   Channel[1].SignalParam[2].Param[1].pacronym = Acronym_O;
   Channel[1].SignalParam[2].Param[1].punit = Unit_B;
@@ -568,10 +569,10 @@ void InitView(void)
   Channel[1].SignalParam[2].Param[1].numDig = 2;
   Channel[1].SignalParam[2].Param[1].isFract = 1;
    
-  //F 
-  Channel[1].SignalParam[2].Param[2].min = 0.0;
-  Channel[1].SignalParam[2].Param[2].max = 125000.0;   
-  Channel[1].SignalParam[2].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[1].SignalParam[2].Param[2].min = 0.1;
+  Channel[1].SignalParam[2].Param[2].max = 10000.0;   
+  Channel[1].SignalParam[2].Param[2].cur = 1.0;   
   Channel[1].SignalParam[2].Param[2].step = 1.0;
   Channel[1].SignalParam[2].Param[2].pacronym = Acronym_F;
   Channel[1].SignalParam[2].Param[2].punit = Unit_Hz;
@@ -585,7 +586,7 @@ void InitView(void)
   Channel[1].SignalParam[2].Param[2].numDig = 6;
   Channel[1].SignalParam[2].Param[2].isFract = 0;
 
-  //D 
+  //Duty
   Channel[1].SignalParam[2].Param[3].min = 0.0;
   Channel[1].SignalParam[2].Param[3].max = 100.0; 
   Channel[1].SignalParam[2].Param[3].cur = 45;   
@@ -602,14 +603,14 @@ void InitView(void)
   Channel[1].SignalParam[2].Param[3].numDig = 3;
   Channel[1].SignalParam[2].Param[3].isFract = 0;
    
-  //SignalParam 3  triangl
+  //SignalParam 3  sawtooth
   Channel[1].SignalParam[3].pname = SigName_3;
   Channel[1].SignalParam[3].name_pos_y = 1;
   
-  //A
+  //Amplitude
   Channel[1].SignalParam[3].Param[0].min = 0.0;
   Channel[1].SignalParam[3].Param[0].max = 5.0;
-  Channel[1].SignalParam[3].Param[0].cur = 3.5;   
+  Channel[1].SignalParam[3].Param[0].cur = 1.5;   
   Channel[1].SignalParam[3].Param[0].step = 0.1;
   Channel[1].SignalParam[3].Param[0].pacronym = Acronym_A;
   Channel[1].SignalParam[3].Param[0].punit = Unit_B;
@@ -623,10 +624,10 @@ void InitView(void)
   Channel[1].SignalParam[3].Param[0].numDig = 2;
   Channel[1].SignalParam[3].Param[0].isFract = 1;
    
-  //O 
-  Channel[1].SignalParam[3].Param[1].min = -5.0;
+  //Offset
+  Channel[1].SignalParam[3].Param[1].min = 0.0;
   Channel[1].SignalParam[3].Param[1].max = 5.0;
-  Channel[1].SignalParam[3].Param[1].cur = -0.1;   
+  Channel[1].SignalParam[3].Param[1].cur = 2.0;   
   Channel[1].SignalParam[3].Param[1].step = 0.1;
   Channel[1].SignalParam[3].Param[1].pacronym = Acronym_O;
   Channel[1].SignalParam[3].Param[1].punit = Unit_B;
@@ -640,10 +641,10 @@ void InitView(void)
   Channel[1].SignalParam[3].Param[1].numDig = 2;
   Channel[1].SignalParam[3].Param[1].isFract = 1;
    
-  //F 
-  Channel[1].SignalParam[3].Param[2].min = 0.0;
-  Channel[1].SignalParam[3].Param[2].max = 125000.0;   
-  Channel[1].SignalParam[3].Param[2].cur = 500.0;   
+  //Frequency
+  Channel[1].SignalParam[3].Param[2].min = 0.1;
+  Channel[1].SignalParam[3].Param[2].max = 10000.0;   
+  Channel[1].SignalParam[3].Param[2].cur = 0.1;   
   Channel[1].SignalParam[3].Param[2].step = 1.0;
   Channel[1].SignalParam[3].Param[2].pacronym = Acronym_F;
   Channel[1].SignalParam[3].Param[2].punit = Unit_Hz;
@@ -657,18 +658,18 @@ void InitView(void)
   Channel[1].SignalParam[3].Param[2].numDig = 5;
   Channel[1].SignalParam[3].Param[2].isFract = 0;
  
-  //D
+  //Duty
   Channel[1].SignalParam[3].Param[3].isAvailable = 0;
   Channel[1].SignalParam[3].Param[3].isVisible = 0;
    
-  //SignalParam 4  gaus noise
+  //SignalParam 4  gaussian noise
   Channel[1].SignalParam[4].pname = SigName_4;
   Channel[1].SignalParam[4].name_pos_y = 1;
 
-  //m 
-  Channel[1].SignalParam[4].Param[4].min = -5.0;
+  //Mean
+  Channel[1].SignalParam[4].Param[4].min = 0.0;
   Channel[1].SignalParam[4].Param[4].max = 5.0;
-  Channel[1].SignalParam[4].Param[4].cur = -0.5;   
+  Channel[1].SignalParam[4].Param[4].cur = 1.5;   
   Channel[1].SignalParam[4].Param[4].step = 0.1;
   Channel[1].SignalParam[4].Param[4].pacronym = Acronym_M;
   Channel[1].SignalParam[4].Param[4].punit = Unit_B;
@@ -682,7 +683,7 @@ void InitView(void)
   Channel[1].SignalParam[4].Param[4].numDig = 2;
   Channel[1].SignalParam[4].Param[4].isFract = 1;
 
-  //var
+  //Variance (Standard Deviation)
   Channel[1].SignalParam[4].Param[5].min = 0.0;
   Channel[1].SignalParam[4].Param[5].max = 5.0;
   Channel[1].SignalParam[4].Param[5].cur = 1.5;   
@@ -703,10 +704,10 @@ void InitView(void)
   Channel[1].SignalParam[5].pname = SigName_5;
   Channel[1].SignalParam[5].name_pos_y = 1;
   
-  //m 
-  Channel[1].SignalParam[5].Param[4].min = -5.0;
+  //Mean
+  Channel[1].SignalParam[5].Param[4].min = 0.0;
   Channel[1].SignalParam[5].Param[4].max = 5.0;
-  Channel[1].SignalParam[5].Param[4].cur = -0.5;   
+  Channel[1].SignalParam[5].Param[4].cur = 1.5;   
   Channel[1].SignalParam[5].Param[4].step = 0.1;
   Channel[1].SignalParam[5].Param[4].pacronym = Acronym_M;
   Channel[1].SignalParam[5].Param[4].punit = Unit_B;
@@ -720,7 +721,7 @@ void InitView(void)
   Channel[1].SignalParam[5].Param[4].numDig = 2;
   Channel[1].SignalParam[5].Param[4].isFract = 1;
 
-  //var
+  //Variance (Standard Deviation)
   Channel[1].SignalParam[5].Param[5].min = 0.0;
   Channel[1].SignalParam[5].Param[5].max = 5.0;
   Channel[1].SignalParam[5].Param[5].cur = 1.5;   
