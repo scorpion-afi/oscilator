@@ -10,8 +10,6 @@
 // !!! size of cycle-buffer is defined in Meas_Drv.h and equal 512 ushort !!!
 // including of Meas_Drv.h is undesirable
 
-extern __UINT32_T_TYPE__ DAC_Buff[1024]; //4  байт
- 
 // function-thread (task), that serves requests from DMA1 iterrupt
 //==============================================================================
 void vCalcTask( void* pvParameters )
@@ -43,17 +41,17 @@ void vCalcTask( void* pvParameters )
     // R7 =  2 kOhm
     // R36 = 2 kOhm
     // not 2000.0f, because of show_result() MUST receive currents in mA
-    /*i_ch1 = ( ( adc_ptr[0]/4095.0f )* 3.3f )/2.0f; 
+    i_ch1 = ( ( adc_ptr[0]/4095.0f )* 3.3f )/2.0f; 
     u_ch1 = ( ( adc_ptr[1]/4095.0f )* 3.3f );
     
     i_ch2 = ( ( adc_ptr[2]/4095.0f )* 3.3f )/2.0f;
-    u_ch2 = ( ( adc_ptr[3]/4095.0f )* 3.3f );*/
+    u_ch2 = ( ( adc_ptr[3]/4095.0f )* 3.3f );
     
-   i_ch1 = ( ( (DAC_Buff[0]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f; 
-   u_ch1 = ( ( (DAC_Buff[1]&0x0000FFFF)/4095.0f )* 3.3f );
+    /*i_ch1 = ( ( (DAC_Buff[0]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f; 
+    u_ch1 = ( ( (DAC_Buff[1]&0x0000FFFF)/4095.0f )* 3.3f );
  
     i_ch2 = ( ( (DAC_Buff[2]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f;
-    u_ch2 = ( ( (DAC_Buff[3]&0x0000FFFF)/4095.0f )* 3.3f );
+    u_ch2 = ( ( (DAC_Buff[3]&0x0000FFFF)/4095.0f )* 3.3f );*/
    
     // this function will have shown result of measuring:
     // power, current and voltage for two channels
