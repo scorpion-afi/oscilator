@@ -59,15 +59,14 @@ void init( void )
   NVIC_InitTypeDef          NVIC_InitStruct;
   
   // common settings ------------------------------------
+  // setting ADCCLK to 12MHz
+  RCC_ADCCLKConfig( RCC_PCLK2_Div6 );  
   
   // Enable DMA1 clock
   RCC_AHBPeriphClockCmd( RCC_AHBPeriph_DMA1, ENABLE );
 
   // Enable GPIOC and ADC1 clock 
   RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_ADC1, ENABLE );
-  
-   // setting ADCCLK to 12MHz
-  RCC_ADCCLKConfig( RCC_PCLK2_Div6 );
   
   // Configure PC.00, PC.01, PC.02 and PC.03 (ADC Channel 10, 11, 12 and 13)
   // as analog inputs 
@@ -128,7 +127,7 @@ void init( void )
     
   DMA_DeInit( DMA1_Channel1 );
   DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;
-  DMA_InitStructure.DMA_MemoryBaseAddr = (uint16_t)gl_adc_buff;
+  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)gl_adc_buff;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
   DMA_InitStructure.DMA_BufferSize = ADC_NUM;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
