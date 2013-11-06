@@ -163,7 +163,7 @@ void init( void )
   RCC->APB1ENR |=  0x02;
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
-  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 100 000 раз в секунду(720)
+  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 25 000 раз в секунду(720)
   TIM_TimeBaseInitStruct.TIM_Prescaler = 3;
   TIM_TimeBaseInit( TIM3, &TIM_TimeBaseInitStruct );
   
