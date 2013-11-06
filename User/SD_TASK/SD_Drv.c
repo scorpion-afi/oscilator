@@ -12,12 +12,14 @@
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
 
+DSTATUS card_status = 0;
+
 // initialization of sd thread
 // return 0, if all is ok
 //==============================================================================
 int init_sd( void )
 {
-  DSTATUS card_status = 0;
+
   FRESULT res = FR_OK; 
   
   init_TIM5();

@@ -41,7 +41,7 @@
     <Windows>
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-29320-866</Identity>
@@ -53,7 +53,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-2094-2809</Identity>
@@ -63,20 +63,20 @@
           </Tab>
         <Tab><Identity>TabID-28537-20181</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-29504-21494</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>22</YPos><SelStart>876</SelStart><SelEnd>876</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Drv.c</Filename><XPos>0</XPos><YPos>153</YPos><SelStart>5678</SelStart><SelEnd>5678</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Osc_Task\Osc_Drv.c</Filename><XPos>0</XPos><YPos>96</YPos><SelStart>596</SelStart><SelEnd>596</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>30</YPos><SelStart>862</SelStart><SelEnd>862</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>268</YPos><SelStart>7601</SelStart><SelEnd>7601</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Task.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>682</SelStart><SelEnd>682</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>14</YPos><SelStart>505</SelStart><SelEnd>505</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\diskio.h</Filename><XPos>0</XPos><YPos>27</YPos><SelStart>1016</SelStart><SelEnd>1016</SelEnd></Tab><ActiveTab>4</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-013d67b8><key>iaridepm.enu1</key></Toolbar-013d67b8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>770</Bottom><Right>408</Right><x>-2</x><y>-2</y><xscreen>415</xscreen><yscreen>387</yscreen><sizeHorzCX>222401</sizeHorzCX><sizeHorzCY>374275</sizeHorzCY><sizeVertCX>219721</sizeVertCX><sizeVertCY>746615</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>220</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>222</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>214700</sizeHorzCY><sizeVertCX>222401</sizeVertCX><sizeVertCY>374275</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013d67b8><key>iaridepm.enu1</key></Toolbar-013d67b8></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>770</Bottom><Right>408</Right><x>-2</x><y>-2</y><xscreen>415</xscreen><yscreen>387</yscreen><sizeHorzCX>222401</sizeHorzCX><sizeHorzCY>374275</sizeHorzCY><sizeVertCX>219721</sizeVertCX><sizeVertCY>746615</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>220</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>222</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>214700</sizeHorzCY><sizeVertCX>222401</sizeVertCX><sizeVertCY>374275</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 
