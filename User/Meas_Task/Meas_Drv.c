@@ -94,7 +94,7 @@ void init( void )
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T3_TRGO;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfChannel = 4;
-  ADC_Init(ADC1, &ADC_InitStructure);
+  ADC_Init( ADC1, &ADC_InitStructure );
 
   // ADC1 regular channels configuration  
   ADC_RegularChannelConfig( ADC1, ADC_Channel_10, 1, ADC_SampleTime_13Cycles5 );
@@ -111,14 +111,15 @@ void init( void )
   // Enable ADC1 
   ADC_Cmd( ADC1, ENABLE );  
 
-  //ADC_ResetCalibration  ( ADC1)  
-  ADC1->CR2 |= ADC_CR2_RSTCAL;
+  // Enable ADC1 reset calibration register   
+  ADC_ResetCalibration( ADC1 );
+  // Check the end of ADC1 reset calibration register 
+  while( ADC_GetResetCalibrationStatus(ADC1) );
 
-  //ADC_GetResetCalibrationStatus  (ADC1);  
-  while( ADC1->CR2 & ADC_CR2_RSTCAL );
-
-  ADC1->CR2 |= ADC_CR2_CAL;   //Запуск калибровки АЦП
-  while( ADC1->CR2 & ADC_CR2_CAL );  //Ожидаем окончания калибровки
+  // Start ADC1 calibration 
+  ADC_StartCalibration( ADC1 );
+  // Check the end of ADC1 calibration 
+  while( ADC_GetCalibrationStatus( ADC1 ) );  
   
   //DMA1 init -------------------------------------------------
   
@@ -127,7 +128,7 @@ void init( void )
     
   DMA_DeInit( DMA1_Channel1 );
   DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;
-  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)gl_adc_buff;
+  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&gl_adc_buff;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
   DMA_InitStructure.DMA_BufferSize = ADC_NUM;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -161,8 +162,8 @@ void init( void )
   RCC->APB1ENR |=  0x02;
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
-  TIM_TimeBaseInitStruct.TIM_Period = 720;   // прерывания 100 000 раз в секунду(720)
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 0;
+  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 100 000 раз в секунду(720)
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 3;
   TIM_TimeBaseInit( TIM3, &TIM_TimeBaseInitStruct );
   
   //выбираем в качестве источника внешнего тригера(TRGO) update event
