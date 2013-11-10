@@ -189,7 +189,8 @@ void CalcSin(void)
 { 
   float dPhase, value;  
   uint32_t SUM, temp, *ptemp;  
-  uint16_t Offset, Ampl;
+  uint16_t Ampl;
+  static uint16_t Offset;
   
   ptemp = pDAC_Buff; 
    
@@ -269,8 +270,8 @@ void CalcSin(void)
     {
       SUM -= 4096;
       
-      //temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
-      temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      //temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
         
       if(CurDAC_Ch == 0)
       {
@@ -289,8 +290,8 @@ void CalcSin(void)
     {
       SUM = 8192 - SUM; //2048 - (SUM - 6144);
       
-      //temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
-      temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      temp = 2*Offset - RAMBuff[CurDAC_Ch][SUM]; // 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
+      //temp = 2048 - (RAMBuff[CurDAC_Ch][SUM] - 2047);
      
       if(CurDAC_Ch == 0)
       {
@@ -466,7 +467,8 @@ void CalcExp(void)
     dPhase = 2*pi/(2048);  // NOT 2048 - 1
     
     Ampl = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    //Offset = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*409.5 + 0.5);
+    Offset = (uint16_t)( CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
  
     rc_time = 2.0f;     
     //rc_time = ( ( CurOscParam[CurDAC_Ch].rc_time + ? ) * ? + ?);
@@ -615,7 +617,8 @@ void CalcGaus(void)
     first_entry[CurDAC_Ch] = 1;
        
     //Ampl[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    Offset[CurDAC_Ch] = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*Lev_per_Volt + 0.5);
+    //Offset[CurDAC_Ch] = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*Lev_per_Volt + 0.5);
+    Offset[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
                   
     R[CurDAC_Ch] = 1;   //anti-lock mechanism
   }

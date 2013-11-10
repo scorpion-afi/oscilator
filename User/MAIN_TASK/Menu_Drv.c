@@ -323,9 +323,9 @@ void InitView(void)
   Channel[0].SignalParam[4].name_pos_y = 1;
 
   //Mean
-  Channel[0].SignalParam[4].Param[4].min = -5.0;
+  Channel[0].SignalParam[4].Param[4].min = 0.0;
   Channel[0].SignalParam[4].Param[4].max = 5.0;
-  Channel[0].SignalParam[4].Param[4].cur = -0.5;   
+  Channel[0].SignalParam[4].Param[4].cur = 1.5;   
   Channel[0].SignalParam[4].Param[4].step = 0.1;
   Channel[0].SignalParam[4].Param[4].pacronym = Acronym_M;
   Channel[0].SignalParam[4].Param[4].punit = Unit_B;
@@ -361,9 +361,9 @@ void InitView(void)
   Channel[0].SignalParam[5].name_pos_y = 1;
   
   //Mean
-  Channel[0].SignalParam[5].Param[4].min = -5.0;
+  Channel[0].SignalParam[5].Param[4].min = 0.0;
   Channel[0].SignalParam[5].Param[4].max = 5.0;
-  Channel[0].SignalParam[5].Param[4].cur = -0.5;   
+  Channel[0].SignalParam[5].Param[4].cur = 1.5;   
   Channel[0].SignalParam[5].Param[4].step = 0.1;
   Channel[0].SignalParam[5].Param[4].pacronym = Acronym_M;
   Channel[0].SignalParam[5].Param[4].punit = Unit_B;
@@ -407,7 +407,7 @@ void InitView(void)
   //Amplitude
   Channel[1].SignalParam[0].Param[0].min = 0.0;   
   Channel[1].SignalParam[0].Param[0].max = 5.0;   
-  Channel[1].SignalParam[0].Param[0].cur = 3.5;
+  Channel[1].SignalParam[0].Param[0].cur = 2.0;
   Channel[1].SignalParam[0].Param[0].step = 0.1;
   Channel[1].SignalParam[0].Param[0].pacronym = Acronym_A;
   Channel[1].SignalParam[0].Param[0].punit = Unit_B;
@@ -531,7 +531,7 @@ void InitView(void)
   Channel[1].SignalParam[1].Param[3].numDig = 3;
   Channel[1].SignalParam[1].Param[3].isFract = 0;
    
-  //SignalParam 2  inv_pulse
+  //SignalParam 2  exp
   Channel[1].SignalParam[2].pname = SigName_2;
   Channel[1].SignalParam[2].name_pos_y = 1;
   
@@ -1197,8 +1197,8 @@ void re_draw_body( void )
     lcd_write( "I=     mA", 0, 2 );
     lcd_write( "I=     mA", 11, 2 );
             
-    lcd_write( "U=      U", 0, 3 );
-    lcd_write( "U=      U", 11, 3 );
+    lcd_write( "U=      V", 0, 3 );
+    lcd_write( "U=      V", 11, 3 );
   }
   else if( 0 == is_meas_mode ) // if must draw body for generation
   {
