@@ -20,11 +20,11 @@ void show_result( float i_ch1, float u_ch1, float i_ch2, float u_ch2 )
   char temp_str[21]; 
   
   // prints power of channel 1
-  sprintf( temp_str, "%5.1f", i_ch1*u_ch1 );
+  sprintf( temp_str, "%5.2f", i_ch1*u_ch1 );
   lcd_write( temp_str, 2, 1 );
   
   // prints power of channel 2
-  sprintf( temp_str, "%5.1f", i_ch2*u_ch2 );
+  sprintf( temp_str, "%5.2f", i_ch2*u_ch2 );
   lcd_write( temp_str, 13, 1 );
   
   // prints current of channel 1

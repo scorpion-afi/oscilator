@@ -9,7 +9,7 @@
 
 // !!! size of cycle-buffer is defined in Meas_Drv.h and equal 512 ushort !!!
 // including of Meas_Drv.h is undesirable
-
+  
 // function-thread (task), that serves requests from DMA1 iterrupt
 //==============================================================================
 void vCalcTask( void* pvParameters )
