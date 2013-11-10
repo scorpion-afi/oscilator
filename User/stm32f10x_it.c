@@ -186,7 +186,7 @@ void TIM2_IRQHandler(void)
 //Генерация сигналов (Osc_xxx.c)
 
 //Обработчик прерываний от DMA2_Channel3 
-// will be called with 5 Hz frequence
+// will be called with x Hz frequence
 //==============================================================================
 void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 {  
@@ -222,7 +222,9 @@ void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 
 // measuring
 
-#define FPS 100
+// this constant defines measuring info refresh rate
+// now it is 3 Hz
+#define FPS 65  // 195/3
 
 //Обработчик прерываний от DMA1_Channel1 
 // will be called with 195 Hz frequence
