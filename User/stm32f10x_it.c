@@ -271,16 +271,35 @@ void DMA1_Channel1_IRQHandler( void )
   //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
   DMA1->IFCR |= 1; //DMA1_IT_GL1;
 }
-
+/*
+int a = 1;
 //Обработчик прерываний от таймера TIM5. (10 ms)     ___ for FatFS purpose ___
 //==============================================================================
 void TIM5_IRQHandler(void)
 { 
+  
+  a++;
+  //disk_timerproc();
+  
+  ITStatus st = TIM_GetITStatus(TIM5, TIM_IT_Update);
+    
+  TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
+}
+*/
+
+//Обработчик прерываний от таймера TIM5. ( 10 мс )
+void TIM5_IRQHandler(void)
+{ 
+  //uint8_t green_led_sd = GPIO_ReadOutputDataBit(GPIOE, GPIO_Pin_2);
+  
+  //green_led_sd = ~green_led_sd & 0x01;
+
+  //GPIO_WriteBit(GPIOE, GPIO_Pin_2, (BitAction)green_led_sd);
+  
   disk_timerproc();
   
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
 }
-
 
 
 //*******************************************************************************

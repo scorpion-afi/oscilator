@@ -23,7 +23,7 @@ int init_sd( void )
   FRESULT res = FR_OK; 
   
   init_TIM5();
-  
+  return 0;
   card_status = disk_initialize( 0 );
   if( card_status )
   {
@@ -75,7 +75,7 @@ unsigned int write( const void* data, unsigned int num )
 //==============================================================================
 //==============================================================================
 
-
+/*
 // initialize TIM5 for FAT_FS purpose
 //==============================================================================
 void init_TIM5(void)
@@ -110,4 +110,27 @@ void init_TIM5(void)
   
   // Enable TIM5 Update interrupt
   TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );
-}
+}*/
+/*
+  // TIM 3 init------------------------------
+  
+  // PCLK1 = 36 ћ√ц
+  // F_interrupt = PCLK1*2 / (TIM_Prescaler + 1) / TIM_Period;
+
+  // Enable TIM3 clocks
+  RCC->APB1ENR |=  0x02;
+  
+  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
+  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывани€ 100 000 раз в секунду(720)
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 0;
+  TIM_TimeBaseInit( TIM3, &TIM_TimeBaseInitStruct );
+  
+  //выбираем в качестве источника внешнего тригера(TRGO) update event
+  TIM_SelectOutputTrigger( TIM3, TIM_TRGOSource_Update ); 
+  
+  // TIM3 enable counter
+  TIM_Cmd( TIM3, ENABLE );
+  
+  // Disable TIM3 Update interrupt
+  TIM_ITConfig( TIM3, TIM_IT_Update, DISABLE );
+*/
