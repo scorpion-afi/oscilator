@@ -53,7 +53,7 @@
           
           
           
-        <item>gl_adc_buff</item><item>adc_ptr</item><item/></expressions>
+        <item>gl_adc_buff</item><item>adc_ptr</item><item></item></expressions>
         <col-names>
           
           
@@ -105,14 +105,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>36</YPos><SelStart>1227</SelStart><SelEnd>1227</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>62</YPos><SelStart>2549</SelStart><SelEnd>2549</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\diskio.h</Filename><XPos>0</XPos><YPos>27</YPos><SelStart>389</SelStart><SelEnd>389</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>17</YPos><SelStart>692</SelStart><SelEnd>692</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>275</YPos><SelStart>8136</SelStart><SelEnd>8136</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>517</SelStart><SelEnd>517</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\sd_spi_stm32.c</Filename><XPos>0</XPos><YPos>961</YPos><SelStart>29335</SelStart><SelEnd>29335</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-013d67b8><key>iaridepm.enu1</key></Toolbar-013d67b8></Sizes></Row0><Row1><Sizes><Toolbar-04bf3e00><key>debuggergui.enu1</key></Toolbar-04bf3e00></Sizes></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>570</Bottom><Right>355</Right><x>-2</x><y>-2</y><xscreen>194</xscreen><yscreen>209</yscreen><sizeHorzCX>103966</sizeHorzCX><sizeHorzCY>202128</sizeHorzCY><sizeVertCX>191318</sizeVertCX><sizeVertCY>553191</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd1></Sizes></Row0><Row1><Sizes><Wnd5><Rect><Top>196</Top><Left>-2</Left><Bottom>396</Bottom><Right>1868</Right><x>-2</x><y>196</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd5></Sizes></Row1></Bottom><Float><Sizes><Wnd3><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>15</Right><x>-2</x><y>-2</y><FloatX>1340</FloatX><FloatY>142</FloatY><FloatWidth>421</FloatWidth><FloatHeight>533</FloatHeight><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>107181</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>544487</sizeVertCY></Rect></Wnd3></Sizes></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013d67b8><key>iaridepm.enu1</key></Toolbar-013d67b8></Sizes></Row0><Row1><Sizes><Toolbar-058b5428><key>debuggergui.enu1</key></Toolbar-058b5428></Sizes></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>570</Bottom><Right>355</Right><x>-2</x><y>-2</y><xscreen>194</xscreen><yscreen>209</yscreen><sizeHorzCX>103966</sizeHorzCX><sizeHorzCY>202128</sizeHorzCY><sizeVertCX>191318</sizeVertCX><sizeVertCY>553191</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd1></Sizes></Row0><Row1><Sizes><Wnd5><Rect><Top>196</Top><Left>-2</Left><Bottom>396</Bottom><Right>1868</Right><x>-2</x><y>196</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd5></Sizes></Row1></Bottom><Float><Sizes><Wnd3><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>117458176</Right><x>-2</x><y>-2</y><FloatX>1340</FloatX><FloatY>142</FloatY><FloatWidth>421</FloatWidth><FloatHeight>533</FloatHeight><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>107181</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>544487</sizeVertCY></Rect></Wnd3></Sizes></Float></Positions>
   </Desktop>
 </Project>
 

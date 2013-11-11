@@ -23,7 +23,9 @@ int init_sd( void )
   FRESULT res = FR_OK; 
   
   init_TIM5();
-  return 0;
+  
+  for( int i = 0; i < 10000; i++);
+
   card_status = disk_initialize( 0 );
   if( card_status )
   {
@@ -100,7 +102,7 @@ void init_TIM5(void)
    
   // Enable the TIM5 Interrupt
   NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;  
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 14; // 14 or 1101 1111 > configMAX_SYSCALL_INTERRUPT_PRIORITY
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 13; // 13 > configMAX_SYSCALL_INTERRUPT_PRIORITY
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init( &NVIC_InitStructure ); 
