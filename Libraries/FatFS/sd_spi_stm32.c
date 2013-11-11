@@ -53,9 +53,10 @@
  #define SOCKET_WP_CONNECTED      0
  #define SOCKET_CP_CONNECTED      1
 
+// GPIO_CP - Card Detect
  #define SPI_SD                   /*SPI1*/ SPI2
  #define GPIO_CS                  /*GPIOA*/ GPIOC
- #define GPIO_CP                  /*GPIOE*/ GPIOB // Card Detect
+ #define GPIO_CP                  /*GPIOE*/ GPIOB 
  #define RCC_APB2Periph_GPIO_CS   /*RCC_APB2Periph_GPIOA*/ RCC_APB2Periph_GPIOC
  #define RCC_APBxPeriph_GPIO_CP   /*RCC_APB2Periph_GPIOE*/ RCC_APB2Periph_GPIOB
  #define GPIO_Pin_CS              /*GPIO_Pin_4*/ GPIO_Pin_6
@@ -64,14 +65,14 @@
  #define DMA_FLAG_SPI_SD_TC_RX    DMA1_FLAG_TC4
  #define DMA_FLAG_SPI_SD_TC_TX    DMA1_FLAG_TC5
  #define GPIO_SPI_SD              /*GPIOA*/ GPIOB	  
- #define GPIO_Pin_CP              /*GPIO_Pin_0*/ GPIO_Pin_11 // Card Detect
+ #define GPIO_Pin_CP              /*GPIO_Pin_0*/ GPIO_Pin_11 
  #define GPIO_Pin_SPI_SD_SCK      /*GPIO_Pin_5*/ GPIO_Pin_13
  #define GPIO_Pin_SPI_SD_MISO     /*GPIO_Pin_6*/ GPIO_Pin_14
  #define GPIO_Pin_SPI_SD_MOSI     /*GPIO_Pin_7*/ GPIO_Pin_15
  #define RCC_APBPeriphClockCmd_SPI_SD  /*RCC_APB2PeriphClockCmd*/ RCC_APB1PeriphClockCmd
  #define RCC_APBPeriph_SPI_SD     /*RCC_APB2Periph_SPI1*/ RCC_APB1Periph_SPI2
- /* - for SPI1 and full-speed APB2: 72MHz/4 */
- #define SPI_BaudRatePrescaler_SPI_SD  SPI_BaudRatePrescaler_4
+ /* - for SPI2 and half-speed APB1: 36MHz/2 */
+ #define SPI_BaudRatePrescaler_SPI_SD  SPI_BaudRatePrescaler_2
 
 
 
