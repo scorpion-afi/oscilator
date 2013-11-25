@@ -34,18 +34,18 @@ void vCalcTask( void* pvParameters )
     
     // ADC_Channel_10 - IoutCh1 (first in regular group)
     // ADC_Channel_11 - VoutCh1
-    // ADC_Channel_12 - IoutCh2 
-    // ADC_Channel_13 - VoutCh2
+    // ADC_Channel_12 - VoutCh2 
+    // ADC_Channel_13 - IoutCh2
     
     // Vref = 3.3 V
     // R7 =  2 kOhm
     // R36 = 2 kOhm
     // not 2000.0f, because of show_result() MUST receive currents in mA
-    i_ch1 = ( ( adc_ptr[0]/4095.0f )* 3.3f )/2.0f; 
-    u_ch1 = ( ( adc_ptr[1]/4095.0f )* 3.3f );
-    
-    i_ch2 = ( ( adc_ptr[2]/4095.0f )* 3.3f )/2.0f;
-    u_ch2 = ( ( adc_ptr[3]/4095.0f )* 3.3f );
+    i_ch1 = 0.1943f * adc_ptr[0] - 0.3238f; 
+    u_ch1 = 0.0011848f * adc_ptr[1] - 0.0119f;           //( 3.3 * 1.446 * adc_ptr[1]/4095.0f );
+        
+    u_ch2 = 0.0009407f * adc_ptr[2] - 0.005f;           //( 3.3 * 1.16 * adc_ptr[3]/4095.0f );
+    i_ch2 = 0.1943f * adc_ptr[3] - 0.4829f;
     
     /*i_ch1 = ( ( (DAC_Buff[0]&0x0000FFFF)/4095.0f )* 3.3f )/2.0f; 
     u_ch1 = ( ( (DAC_Buff[1]&0x0000FFFF)/4095.0f )* 3.3f );

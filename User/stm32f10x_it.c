@@ -259,7 +259,7 @@ void DMA1_Channel1_IRQHandler( void )
   }
   
   // sends a message to write data to sd card
-  //xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
+  xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
    
   //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
   //которую прервало данное прерывание, то переключаем контекст не дожидаясь окончания кванта времени 

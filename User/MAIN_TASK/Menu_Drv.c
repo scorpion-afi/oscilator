@@ -122,7 +122,7 @@ void InitView(void)
   //Amplitude
   Channel[0].SignalParam[1].Param[0].min = 0.0;
   Channel[0].SignalParam[1].Param[0].max = 5.0;
-  Channel[0].SignalParam[1].Param[0].cur = 2.0;   
+  Channel[0].SignalParam[1].Param[0].cur = 0.0;   
   Channel[0].SignalParam[1].Param[0].step = 0.1;
   Channel[0].SignalParam[1].Param[0].pacronym = Acronym_A;
   Channel[0].SignalParam[1].Param[0].punit = Unit_B;
@@ -139,7 +139,7 @@ void InitView(void)
   //Offset
   Channel[0].SignalParam[1].Param[1].min = 0.0;
   Channel[0].SignalParam[1].Param[1].max = 5.0;
-  Channel[0].SignalParam[1].Param[1].cur = 0.0;   
+  Channel[0].SignalParam[1].Param[1].cur = 1.0;   
   Channel[0].SignalParam[1].Param[1].step = 0.1;
   Channel[0].SignalParam[1].Param[1].pacronym = Acronym_O;
   Channel[0].SignalParam[1].Param[1].punit = Unit_B;
@@ -156,7 +156,7 @@ void InitView(void)
   //Frequency
   Channel[0].SignalParam[1].Param[2].min = 0.1;
   Channel[0].SignalParam[1].Param[2].max = 10000.0;   
-  Channel[0].SignalParam[1].Param[2].cur = 10000.0;   
+  Channel[0].SignalParam[1].Param[2].cur = 0.0;   
   Channel[0].SignalParam[1].Param[2].step = 1.0;
   Channel[0].SignalParam[1].Param[2].pacronym = Acronym_F;
   Channel[0].SignalParam[1].Param[2].punit = Unit_Hz;
@@ -397,7 +397,7 @@ void InitView(void)
 //Channel 2 
   
   Channel[1].pos_x = 11;
-  Channel[1].CurSigForm  = 3;
+  Channel[1].CurSigForm  = 1;
   Channel[1].isOn = 1;
  
   //SignalParam 0  sin
@@ -466,7 +466,7 @@ void InitView(void)
   //Amplitude
   Channel[1].SignalParam[1].Param[0].min = 0.0;
   Channel[1].SignalParam[1].Param[0].max = 5.0;
-  Channel[1].SignalParam[1].Param[0].cur = 1.0;   
+  Channel[1].SignalParam[1].Param[0].cur = 0.0;   
   Channel[1].SignalParam[1].Param[0].step = 0.1;
   Channel[1].SignalParam[1].Param[0].pacronym = Acronym_A;
   Channel[1].SignalParam[1].Param[0].punit = Unit_B;
@@ -483,7 +483,7 @@ void InitView(void)
   //Offset
   Channel[1].SignalParam[1].Param[1].min = 0.0;
   Channel[1].SignalParam[1].Param[1].max = 5.0;
-  Channel[1].SignalParam[1].Param[1].cur = 2.0;   
+  Channel[1].SignalParam[1].Param[1].cur = 1.0;   
   Channel[1].SignalParam[1].Param[1].step = 0.1;
   Channel[1].SignalParam[1].Param[1].pacronym = Acronym_O;
   Channel[1].SignalParam[1].Param[1].punit = Unit_B;
@@ -500,7 +500,7 @@ void InitView(void)
   //Frequency
   Channel[1].SignalParam[1].Param[2].min = 0.1;
   Channel[1].SignalParam[1].Param[2].max = 10000.0;   
-  Channel[1].SignalParam[1].Param[2].cur = 0.1;   
+  Channel[1].SignalParam[1].Param[2].cur = 0.0;   
   Channel[1].SignalParam[1].Param[2].step = 1.0;
   Channel[1].SignalParam[1].Param[2].pacronym = Acronym_F;
   Channel[1].SignalParam[1].Param[2].punit = Unit_Hz;

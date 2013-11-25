@@ -1,7 +1,17 @@
-/*-----------------------------------------------------------------------*/
-/* MMC/SDSC/SDHC (in SPI mode) control module for STM32 Version 1.1.6    */
-/* (C) Martin Thomas, 2010 - based on the AVR MMC module (C)ChaN, 2007   */
-/*-----------------------------------------------------------------------*/
+/**
+  ******************************************************************************
+  * @file    sd_spi_stm32.c 
+  * @based on the AVR MMC module (C)ChaN, 2007
+  * @revised by (C) Martin Thomas, 2010, Alex Mazurenko, 2012
+  * @version V1.1.6.1
+  * @date    June-2012
+  * @brief   MMC/SDSC/SDHC (in SPI mode) control module for STM32
+  ******************************************************************************
+  * 
+  * Низкоуровневые функции обмена данными с SD-картой через интерфейс SPI
+  * 
+  ******************************************************************************
+  */
 
 /* Copyright (c) 2010, Martin Thomas, ChaN
    All rights reserved.
@@ -31,7 +41,7 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE. */
 
-
+/* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "ffconf.h"
 #include "diskio.h"
@@ -42,7 +52,7 @@
 
 #ifdef STM32_SD_USE_DMA
 // #warning "Information only: using DMA"
-#pragma message "*** Using DMA ***"
+#pragma message ("*** Using DMA ***")
 #endif
 
 /* set to 1 to provide a disk_ioctrl function even if not needed by the FatFs */
@@ -54,23 +64,23 @@
  #define SOCKET_CP_CONNECTED      1
 
 // GPIO_CP - Card Detect
- #define SPI_SD                   /*SPI1*/ SPI2
- #define GPIO_CS                  /*GPIOA*/ GPIOC
- #define GPIO_CP                  /*GPIOE*/ GPIOB 
- #define RCC_APB2Periph_GPIO_CS   /*RCC_APB2Periph_GPIOA*/ RCC_APB2Periph_GPIOC
- #define RCC_APBxPeriph_GPIO_CP   /*RCC_APB2Periph_GPIOE*/ RCC_APB2Periph_GPIOB
- #define GPIO_Pin_CS              /*GPIO_Pin_4*/ GPIO_Pin_6
+ #define SPI_SD                   SPI2 /*SPI1*/ 
+ #define GPIO_CS                  GPIOC /*GPIOA*/ 
+ #define GPIO_CP                  GPIOB /*GPIOE*/ 
+ #define RCC_APB2Periph_GPIO_CS   RCC_APB2Periph_GPIOC /*RCC_APB2Periph_GPIOA*/ 
+ #define RCC_APBxPeriph_GPIO_CP   RCC_APB2Periph_GPIOB /*RCC_APB2Periph_GPIOE*/ 
+ #define GPIO_Pin_CS              GPIO_Pin_6 /*GPIO_Pin_4*/ 
  #define DMA_Channel_SPI_SD_RX    DMA1_Channel4
  #define DMA_Channel_SPI_SD_TX    DMA1_Channel5
  #define DMA_FLAG_SPI_SD_TC_RX    DMA1_FLAG_TC4
  #define DMA_FLAG_SPI_SD_TC_TX    DMA1_FLAG_TC5
- #define GPIO_SPI_SD              /*GPIOA*/ GPIOB	  
- #define GPIO_Pin_CP              /*GPIO_Pin_0*/ GPIO_Pin_11 
- #define GPIO_Pin_SPI_SD_SCK      /*GPIO_Pin_5*/ GPIO_Pin_13
- #define GPIO_Pin_SPI_SD_MISO     /*GPIO_Pin_6*/ GPIO_Pin_14
- #define GPIO_Pin_SPI_SD_MOSI     /*GPIO_Pin_7*/ GPIO_Pin_15
- #define RCC_APBPeriphClockCmd_SPI_SD  /*RCC_APB2PeriphClockCmd*/ RCC_APB1PeriphClockCmd
- #define RCC_APBPeriph_SPI_SD     /*RCC_APB2Periph_SPI1*/ RCC_APB1Periph_SPI2
+ #define GPIO_SPI_SD              GPIOB /*GPIOA*/ 	  
+ #define GPIO_Pin_CP              GPIO_Pin_11 /*GPIO_Pin_0*/  
+ #define GPIO_Pin_SPI_SD_SCK      GPIO_Pin_13 /*GPIO_Pin_5*/ 
+ #define GPIO_Pin_SPI_SD_MISO     GPIO_Pin_14 /*GPIO_Pin_6*/ 
+ #define GPIO_Pin_SPI_SD_MOSI     GPIO_Pin_15 /*GPIO_Pin_7*/ 
+ #define RCC_APBPeriphClockCmd_SPI_SD  RCC_APB1PeriphClockCmd /*RCC_APB2PeriphClockCmd*/ 
+ #define RCC_APBPeriph_SPI_SD     RCC_APB1Periph_SPI2 /*RCC_APB2Periph_SPI1*/ 
  /* - for SPI2 and half-speed APB1: 36MHz/2 */
  #define SPI_BaudRatePrescaler_SPI_SD  SPI_BaudRatePrescaler_2
 
@@ -115,7 +125,7 @@
 
 ---------------------------------------------------------------------------*/
 
-static const DWORD socket_state_mask_cp = (1 << 0);
+static const DWORD socket_state_mask_cp = 0;
 //static const DWORD socket_state_mask_wp = (1 << 1);
 
 //static volatile
@@ -194,7 +204,7 @@ static void socket_cp_init(void)
 
 static  DWORD socket_is_empty(void)
 {
-	return ( GPIO_ReadInputData(GPIO_CP) & GPIO_Pin_CP ) ? socket_state_mask_cp : FALSE;
+	return ( GPIO_ReadInputData(GPIO_CP) & GPIO_Pin_CP ) ? socket_state_mask_cp : TRUE;
 }
 
 #else
@@ -973,9 +983,9 @@ RAMFUNC void disk_timerproc (void)
 //		else                                /* WP is L (write enabled) */
 //			s &= ~STA_PROTECT;
 
-		if (pv & socket_state_mask_cp)      /* INS = H (Socket empty) */
+		if (pv & socket_state_mask_cp)      /* INS = H (Card inserted) */
 			s |= (STA_NODISK );//| STA_NOINIT);
-		else                                /* INS = L (Card inserted) */
+		else                                /* INS = L (Socket empty) */
 			s = 0;//~STA_NODISK;
 
 		Stat = s;
