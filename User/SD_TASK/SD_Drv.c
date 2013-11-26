@@ -3,7 +3,7 @@
 #define SDDrv	
 #include "SD_Drv.h"
 
-#define FILE_NAME "0:adc_meas.txt"
+#define FILE_NAME "0:adc.txt"
 
 #include "stm32f10x.h"
 #include "ff.h"
