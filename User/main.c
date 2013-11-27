@@ -8,14 +8,15 @@
 
 #include "stm32f10x_rcc.h"  
 
-//#include "SD_Drv.h"
-
 #include "diskio.h"
-#include "fattime.h"
 #include "ff.h"
 
-void init_TIM5(void);
-//FRESULT create_file(const char *FileName);
+int init_sd( void );
+void init_TIM5( void );
+unsigned int write( const void* data, unsigned int num );
+
+FATFS fs;       // main FAT_FS struct
+FIL file;       // file object
 
 //точка входа
 //=======================================================================================
@@ -24,21 +25,10 @@ int main()
   RCC_ClocksTypeDef kyky;
   RCC_GetClocksFreq( &kyky );
  
-  //init_sd();
- 
-  init_TIM5();
+  init_sd();
   
-  for( int i = 0; i < 10000; i++);
-  
-  DSTATUS card_status = disk_initialize(0);
-  
-  FATFS   fs;                       //структура, с которой будем связывать диск 
- 
-  FRESULT res = f_mount(0, &fs);    //выполняем связывание диска со структурой fs
-  //create_file ("0:afi.txt");        //создаем первый файл
-  //f_mount(0, NULL);                 //отменяем связывание диска со структурой fs
-
-  
+  write( "hello afi", 9 );
+   
   while(1)
   {
     ;
@@ -46,8 +36,72 @@ int main()
   //-+-+-+-+-+-+-+-+-+-+-+ 
 }
 
+// initialization of sd thread
+// return 0, if all is ok
+//==============================================================================
+int init_sd( void )
+{
+  DSTATUS card_status = 0;
+  FRESULT res = FR_OK; 
+  
+  init_TIM5();
+  
+  for( int i = 0; i < 100000; i++ );
+  
+  card_status = disk_initialize( 0 );
+  if( card_status )
+  {
+    return 1;
+  }
+   
+  res = f_mount( 0, &fs );   // mounts disk 0 with fs           
+  if( res )
+  {
+    return 2;    
+  }
 
-//
+  // creates file with name FILE_NAME and open it for write
+  res = f_open( &file, "0:readmea.txt", FA_WRITE | FA_CREATE_ALWAYS ); 
+  if( res )
+  {
+    return 3;    
+  } 
+  
+  return 0;
+}
+
+// data - pointer to data to be written on sd-card
+// num - size of data in bytes !!!
+// return 0, if all is ok
+//==============================================================================
+unsigned int write( const void* data, unsigned int num )
+{
+  UINT len = 0;                  // len will storage number of real written bytes
+  FRESULT res = FR_OK; 
+
+  // writes num bytes of data to file
+  res = f_write( &file, data, num, &len );
+  if( res )
+  {
+    return 1;    //if some error was occured
+  }
+  
+  if( num != len )
+  {
+    return 2;    //if some error was occured
+  }
+  
+  return 0; 
+}
+
+
+//==============================================================================
+//==============================================================================
+//==============================================================================
+
+
+// initialize TIM5 for FAT_FS purpose
+//==============================================================================
 void init_TIM5(void)
 {
   NVIC_InitTypeDef          NVIC_InitStructure;
@@ -67,62 +121,17 @@ void init_TIM5(void)
   TIM_TimeBaseInitStruct.TIM_Period = 720;   // прерывания 100 раз в секунду
   TIM_TimeBaseInitStruct.TIM_Prescaler = 999; // 1000 - 1
   TIM_TimeBaseInit( TIM5, &TIM_TimeBaseInitStruct );
-  
-  // necessary time delay - 1000ms
-  // 1000 ms <-> 1 ips (interrupts per second)
-  // PCLK1 = 36 МГц
-  // CK_PSC = 2*PCLK1 = 72 MGz
-  // number of ips = CK_PSC / (PSC*CNT)
-  // ==>
-  // 1 ips = 72 * 10^6 / (1000*72000)
-  //TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
-  //TIM_TimeBaseInitStruct.TIM_Period = 36000;   // прерывания 2 раза в секунду
-  //TIM_TimeBaseInitStruct.TIM_Prescaler = 1999; // 1000 - 1
-  //TIM_TimeBaseInit( TIM5, &TIM_TimeBaseInitStruct );
-  
+   
   // Enable the TIM5 Interrupt
   NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;  
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 13; // 13 or 1101 1111 > configMAX_SYSCALL_INTERRUPT_PRIORITY
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 14; // 14 or 1101 1111 > configMAX_SYSCALL_INTERRUPT_PRIORITY
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure); 
+  NVIC_Init( &NVIC_InitStructure ); 
 
   // TIM5 enable counter
-  TIM_Cmd(TIM5, ENABLE);
+  TIM_Cmd( TIM5, ENABLE );
   
   // Enable TIM5 Update interrupt
-  TIM_ITConfig(TIM5, TIM_IT_Update, ENABLE);
+  TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );
 }
-/*
-//*********************************************************************************************
-//function создает текстовый файл и записывает в него строку "Hello, Word"                   //
-//argument имя файла                                                                         //
-//*********************************************************************************************
-FRESULT create_file(const char *FileName)
-{
-  FRESULT res;               //для возвращаемого функциями результата
-  FIL file;                  //файловый объект
-  UINT len;                  //для хранения количества реально записанных байт
-  char str[] = "Hello, Word";  //записываемая строка
- 
-  //создаем файл с именем FileName и открываем его для для записи
-  res = f_open(&file, FileName, FA_WRITE | FA_CREATE_ALWAYS); 
-  if(res)
-  {
-    return res;    //если произошла ошибка
-  }
-  
-  //записываем строку в файл
-  res = f_write(&file, str, sizeof(str), &len);
-  if(res)
-  {
-    f_close(&file);
-    return res;    //если произошла ошибка
-  }
-  
-  //закрываем файл
-  f_close(&file);
-  
-  return res;
-}
-*/

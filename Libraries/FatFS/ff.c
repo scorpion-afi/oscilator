@@ -7,6 +7,8 @@
 /
 /  Copyright (C) 2011, ChaN, all right reserved.
 /
+/  Revised by Alex Mazurenko, 2012
+/
 / * The FatFs module is a free software and there is NO WARRANTY.
 / * No restriction on use. You can use, modify and redistribute it for
 /   personal, non-profit or commercial products UNDER YOUR RESPONSIBILITY.
@@ -2216,8 +2218,7 @@ FRESULT f_mount (
 		rfs->fs_type = 0;			/* Clear old fs object */
 	}
 
-	if( fs != (void*)0 )
-        {
+	if (fs) {
 	  fs->fs_type = 0;			/* Clear new fs object */
 #if _FS_REENTRANT					/* Create sync object for the new volume */
 	  if (!ff_cre_syncobj(vol, &fs->sobj)) return FR_INT_ERR;
