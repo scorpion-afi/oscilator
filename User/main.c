@@ -6,36 +6,32 @@
 #define MAIN
 #include "main.h"
 
-#include "stm32f10x_rcc.h"  
-
 #include "diskio.h"
 #include "ff.h"
 
-int init_sd( void );
-void init_TIM5( void );
+int          init_sd( void );
+void         init_TIM5( void );
 unsigned int write( const void* data, unsigned int num );
+extern void  socket_cp_init( void );
 
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
 
+char* str = "hello afi";
 
-  
 //точка входа
 //=======================================================================================
-int main()
-{ 
-  RCC_ClocksTypeDef kyky; 
-  RCC_GetClocksFreq( &kyky );   
-
-  init_TIM5();
+int main( void )
+{   
+  init_TIM5(); 
+  init_sd();
   
-  //write( "hello afi", 9 );
+  write( str, 9 );
    
   while(1)
   {
     ;
   }
-  //-+-+-+-+-+-+-+-+-+-+-+ 
 }
 
 // initialization of sd thread
@@ -46,11 +42,7 @@ int init_sd( void )
   DSTATUS card_status = 0;
   FRESULT res = FR_OK; 
   
-  init_TIM5();
-  
-  for( int i = 0; i < 100000; i++ );
-  
-  card_status = disk_initialize( 0 );
+  //card_status = disk_initialize( 0 );
   if( card_status )
   {
     return 1;
@@ -92,6 +84,8 @@ unsigned int write( const void* data, unsigned int num )
   {
     return 2;    //if some error was occured
   }
+
+  f_close( &file );  
   
   return 0; 
 }
@@ -104,11 +98,13 @@ unsigned int write( const void* data, unsigned int num )
 
 // initialize TIM5 for FAT_FS purpose
 //==============================================================================
-void init_TIM5(void)
+void init_TIM5( void )
 {
   NVIC_InitTypeDef          NVIC_InitStructure;
   TIM_TimeBaseInitTypeDef   TIM_TimeBaseInitStruct;
-  
+   
+  socket_cp_init(); 
+    
   // Enable TIM5 clocks
   RCC->APB1ENR |=  0x08;
   

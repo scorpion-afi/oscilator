@@ -286,7 +286,7 @@ void TIM5_IRQHandler(void)
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
 }
 */
-int afi_k;
+
 //Обработчик прерываний от таймера TIM5. ( 10 мс )
 void TIM5_IRQHandler(void)
 { 
@@ -296,8 +296,8 @@ void TIM5_IRQHandler(void)
 
   //GPIO_WriteBit(GPIOE, GPIO_Pin_2, (BitAction)green_led_sd);
   
-  //disk_timerproc();
-  afi_k++;
+  disk_timerproc();
+
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
 }
 

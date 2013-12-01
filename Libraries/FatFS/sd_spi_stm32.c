@@ -194,11 +194,11 @@ static DWORD socket_is_write_protected(void)
 #if SOCKET_CP_CONNECTED
 /* Socket's Card-Present Pin: high = socket empty, low = card inserted */
 
-static void socket_cp_init(void)
+void socket_cp_init( void )
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
-  /* Configure I/O for card-present */
+  // Configure I/O for card-present 
   RCC_APB2PeriphClockCmd( RCC_APBxPeriph_GPIO_CP, ENABLE );
   GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_CP;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
@@ -1012,6 +1012,7 @@ RAMFUNC void disk_timerproc (void)
   ns = pv;
   pv = socket_is_empty(); // | socket_is_write_protected();	/* Sample socket switch */
 
+  // only clear Stat  - ???
   if( ns == pv )          /* Have contacts stabled? */
   {                         
     s = Stat;
