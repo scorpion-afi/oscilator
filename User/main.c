@@ -18,16 +18,18 @@ unsigned int write( const void* data, unsigned int num );
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
 
+
+  
 //точка входа
 //=======================================================================================
 int main()
 { 
-  RCC_ClocksTypeDef kyky;
-  RCC_GetClocksFreq( &kyky );
- 
-  init_sd();
+  RCC_ClocksTypeDef kyky; 
+  RCC_GetClocksFreq( &kyky );   
+
+  init_TIM5();
   
-  write( "hello afi", 9 );
+  //write( "hello afi", 9 );
    
   while(1)
   {
