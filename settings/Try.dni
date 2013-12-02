@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1600623899
+Checksum=1090966213
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -93,8 +93,8 @@ mode=0
 Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\startup_stm32f10x_hd.s}.453.1" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "0x08000004" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "0x08000A62" 0 0 1 "" 0 "" 0
-Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\User\stm32f10x_it.c}.291.1" 0 0 1 "" 0 "" 0
-Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\SD_TASK\SD_Task.c}.18.7" 0 0 1 "" 0 "" 0
+Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\stm32f10x_it.c}.183.3" 0 0 1 "" 0 "" 0
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\SD_TASK\SD_Task.c}.34.5" 0 0 1 "" 0 "" 0
 Count=5
 [Log file]
 LoggingEnabled=_ 0

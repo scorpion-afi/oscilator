@@ -164,7 +164,7 @@ void init( void )
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
   TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 100 000 раз в секунду(720)
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 0;
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 99; // 100 - 1
   TIM_TimeBaseInit( TIM3, &TIM_TimeBaseInitStruct );
   
   //выбираем в качестве источника внешнего тригера(TRGO) update event

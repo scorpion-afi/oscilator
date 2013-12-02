@@ -3,26 +3,22 @@
 #define SDDrv	
 #include "SD_Drv.h"
 
-#define FILE_NAME "0:adc.txt"
-
-#include "stm32f10x.h"
-#include "ff.h"
+// for FAT_FS
 #include "diskio.h"  // for DSTATUS
+#include "ff.h"
+
+#define FILE_NAME "0:scor.txt"
 
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
-
-DSTATUS card_status = 0;
 
 // initialization of sd thread
 // return 0, if all is ok
 //==============================================================================
 int init_sd( void )
 {
-
+  DSTATUS card_status = 0;
   FRESULT res = FR_OK; 
-  
-  init_TIM5();
   
   card_status = disk_initialize( 0 );
   if( card_status )
@@ -35,9 +31,11 @@ int init_sd( void )
   {
     return 2;    
   }
-
-  // creates file with name FILE_NAME and open it for write
-  res = f_open( &file, FILE_NAME, FA_WRITE | FA_CREATE_ALWAYS); 
+  
+  // opens/creates file with name FILE_NAME
+  // FA_OPEN_ALWAYS - Opens the file if it is existing. If not, a new file is created.
+  // FA_WRITE | FA_READ - Data can be read/written from/to the file.
+  res = f_open( &file, FILE_NAME, FA_WRITE | FA_READ | FA_OPEN_ALWAYS ); 
   if( res )
   {
     return 3;    
@@ -52,25 +50,18 @@ int init_sd( void )
 //==============================================================================
 unsigned int write( const void* data, unsigned int num )
 {
-  UINT len = 0;                  // len will storage number of real written bytes
-  FRESULT res = FR_OK; 
+  UINT len;                  // len will storage number of real written bytes
+  FRESULT res; 
 
   // writes num bytes of data to file
   res = f_write( &file, data, num, &len );
-  if( res )
-  {
-    f_close( &file );
-    return 1;    //if some error was occured
-  }
   
-  if( num != len )
+  if( ( res ) || ( num != len ) )  //if some error was occured
   {
-    f_close( &file );
-    return 2;    //if some error was occured
-  }
+    return 1;    
+  } 
   
-  f_close( &file );
-  return 0; 
+  return f_sync( &file ); // flushes the cached information of a writing file 
 }
 
 
@@ -81,11 +72,13 @@ unsigned int write( const void* data, unsigned int num )
 
 // initialize TIM5 for FAT_FS purpose
 //==============================================================================
-void init_TIM5(void)
+void init_TIM5( void )
 {
   NVIC_InitTypeDef          NVIC_InitStructure;
   TIM_TimeBaseInitTypeDef   TIM_TimeBaseInitStruct;
-  
+   
+  //socket_cp_init(); 
+    
   // Enable TIM5 clocks
   RCC->APB1ENR |=  0x08;
   
@@ -113,4 +106,18 @@ void init_TIM5(void)
   
   // Enable TIM5 Update interrupt
   TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );
+}
+
+// deinitialize TIM5 for FAT_FS purpose
+//==============================================================================
+void de_init_TIM5( void )
+{  
+  // Disable TIM5 Update interrupt
+  TIM_ITConfig( TIM5, TIM_IT_Update, DISABLE );
+    
+  // TIM5 disable counter
+  TIM_Cmd( TIM5, DISABLE );
+  
+  // Disable TIM5 clocks
+  RCC->APB1ENR &= ~0x08;
 }

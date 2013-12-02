@@ -141,17 +141,20 @@ enum speed_setting { INTERFACE_SLOW, INTERFACE_FAST };
 
 static void interface_speed( enum speed_setting speed )
 {
-	DWORD tmp;
+  DWORD tmp;
 
-	tmp = SPI_SD->CR1;
-	if ( speed == INTERFACE_SLOW ) {
-		/* Set slow clock (100k-400k) */
-		tmp = ( tmp | SPI_BaudRatePrescaler_256 );
-	} else {
-		/* Set fast clock (depends on the CSD) */
-		tmp = ( tmp & ~SPI_BaudRatePrescaler_256 ) | SPI_BaudRatePrescaler_SPI_SD;
-	}
-	SPI_SD->CR1 = tmp;
+  tmp = SPI_SD->CR1;
+  if( speed == INTERFACE_SLOW )
+  {
+    /* Set slow clock (100k-400k) */
+    tmp = ( tmp | SPI_BaudRatePrescaler_256 );
+  }
+  else
+  {
+    /* Set fast clock (depends on the CSD) */
+    tmp = ( tmp & ~SPI_BaudRatePrescaler_256 ) | SPI_BaudRatePrescaler_SPI_SD;
+  }
+  SPI_SD->CR1 = tmp;
 }
 
 #if SOCKET_WP_CONNECTED
@@ -191,20 +194,20 @@ static DWORD socket_is_write_protected(void)
 #if SOCKET_CP_CONNECTED
 /* Socket's Card-Present Pin: high = socket empty, low = card inserted */
 
-static void socket_cp_init(void)
+void socket_cp_init( void )
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_InitTypeDef GPIO_InitStructure;
 
-	/* Configure I/O for card-present */
-	RCC_APB2PeriphClockCmd(RCC_APBxPeriph_GPIO_CP, ENABLE);
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_CP;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
-	GPIO_Init(GPIO_CP, &GPIO_InitStructure);
+  // Configure I/O for card-present 
+  RCC_APB2PeriphClockCmd( RCC_APBxPeriph_GPIO_CP, ENABLE );
+  GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_CP;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init( GPIO_CP, &GPIO_InitStructure );
 }
 
-static  DWORD socket_is_empty(void)
+static DWORD socket_is_empty( void )
 {
-	return ( GPIO_ReadInputData(GPIO_CP) & GPIO_Pin_CP ) ? socket_state_mask_cp : TRUE;
+  return ( GPIO_ReadInputData( GPIO_CP ) & GPIO_Pin_CP ) ? socket_state_mask_cp : TRUE; // ???
 }
 
 #else
@@ -259,15 +262,15 @@ static int chk_power(void)		/* Socket power state: 0=off, 1=on */
 
 #else
 
-static void card_power(BYTE on)
+static void card_power( BYTE on )
 {
-	on=on;
+  on = on;
 }
 
 #if (STM32_SD_DISK_IOCTRL == 1)
 static int chk_power(void)
 {
-	return 1; /* fake powered */
+  return 1; /* fake powered */
 }
 #endif
 
@@ -279,17 +282,17 @@ static int chk_power(void)
 /*-----------------------------------------------------------------------*/
 static BYTE stm32_spi_rw( BYTE out )
 {
-	/* Loop while DR register in not empty */
-	/// not needed: while (SPI_I2S_GetFlagStatus(SPI_SD, SPI_I2S_FLAG_TXE) == RESET) { ; }
+  /* Loop while DR register in not empty */
+  /// not needed: while (SPI_I2S_GetFlagStatus(SPI_SD, SPI_I2S_FLAG_TXE) == RESET) { ; }
 
-	/* Send byte through the SPI peripheral */
-	SPI_I2S_SendData(SPI_SD, out);
+  /* Send byte through the SPI peripheral */
+  SPI_I2S_SendData( SPI_SD, out );
 
-	/* Wait to receive a byte */
-	while (SPI_I2S_GetFlagStatus(SPI_SD, SPI_I2S_FLAG_RXNE) == RESET) { ; }
+  /* Wait to receive a byte */
+  while( SPI_I2S_GetFlagStatus( SPI_SD, SPI_I2S_FLAG_RXNE ) == RESET ) { ; }
 
-	/* Return the byte read from the SPI bus */
-	return SPI_I2S_ReceiveData(SPI_SD);
+  /* Return the byte read from the SPI bus */
+  return SPI_I2S_ReceiveData( SPI_SD );
 }
 
 
@@ -304,14 +307,13 @@ static BYTE stm32_spi_rw( BYTE out )
 /* Receive a byte from MMC via SPI  (Platform dependent)                 */
 /*-----------------------------------------------------------------------*/
 
-static
-BYTE rcvr_spi (void)
+static BYTE rcvr_spi( void )
 {
-	return stm32_spi_rw(0xff);
+  return stm32_spi_rw( 0xff );
 }
 
 /* Alternative macro to receive data fast */
-#define rcvr_spi_m(dst)  *(dst)=stm32_spi_rw(0xff)
+#define rcvr_spi_m(dst)  *(dst) = stm32_spi_rw(0xff)
 
 
 
@@ -319,19 +321,21 @@ BYTE rcvr_spi (void)
 /* Wait for card ready                                                   */
 /*-----------------------------------------------------------------------*/
 
-static
-BYTE wait_ready (void)
+static BYTE wait_ready( void )
 {
-	BYTE res;
+  BYTE res;
 
+  Timer2 = 50;	/* Wait for ready in timeout of 500ms */
+  
+  rcvr_spi();
+  
+  do
+  {
+    res = rcvr_spi();
+  }
+  while( ( res != 0xFF ) && Timer2 );
 
-	Timer2 = 50;	/* Wait for ready in timeout of 500ms */
-	rcvr_spi();
-	do
-		res = rcvr_spi();
-	while ((res != 0xFF) && Timer2);
-
-	return res;
+  return res;
 }
 
 
@@ -340,11 +344,10 @@ BYTE wait_ready (void)
 /* Deselect the card and release SPI bus                                 */
 /*-----------------------------------------------------------------------*/
 
-static
-void release_spi (void)
+static void release_spi( void )
 {
-	DESELECT();
-	rcvr_spi();
+  DESELECT();
+  rcvr_spi();
 }
 
 #ifdef STM32_SD_USE_DMA
@@ -442,91 +445,90 @@ void stm32_dma_transfer(
 /* Power Control and interface-initialization (Platform dependent)       */
 /*-----------------------------------------------------------------------*/
 
-static
-void power_on (void)
+static void power_on (void)
 {
-	SPI_InitTypeDef  SPI_InitStructure;
-	GPIO_InitTypeDef GPIO_InitStructure;
-	volatile BYTE dummyread;
+  SPI_InitTypeDef  SPI_InitStructure;
+  GPIO_InitTypeDef GPIO_InitStructure;
+  volatile BYTE dummyread;
 
-	/* Enable GPIO clock for CS */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIO_CS, ENABLE);
-	/* Enable SPI clock, SPI1: APB2, SPI2: APB1 */
-	RCC_APBPeriphClockCmd_SPI_SD(RCC_APBPeriph_SPI_SD, ENABLE);
+  /* Enable GPIO clock for CS */
+  RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIO_CS, ENABLE );
+  /* Enable SPI clock, SPI1: APB2, SPI2: APB1 */
+  RCC_APBPeriphClockCmd_SPI_SD( RCC_APBPeriph_SPI_SD, ENABLE );
 
-	card_power(1);
-	socket_cp_init();
-//	socket_wp_init();
+  card_power(1);
+  socket_cp_init();
+  //socket_wp_init();
 
-	for (Timer1 = 25; Timer1; );	/* Wait for 250ms */
+  for( Timer1 = 25; Timer1; );	/* Wait for 250ms */
 
-	/* Configure I/O for Flash Chip select */
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_CS;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIO_CS, &GPIO_InitStructure);
+  /* Configure I/O for Flash Chip select */
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_CS;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init( GPIO_CS, &GPIO_InitStructure );
 
-	/* De-select the Card: Chip Select high */
-	DESELECT();
+  /* De-select the Card: Chip Select high */
+  DESELECT();
 
-	/* Configure SPI pins: SCK and MOSI with default alternate function (not re-mapped) push-pull */
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_SCK | GPIO_Pin_SPI_SD_MOSI;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-	GPIO_Init(GPIO_SPI_SD, &GPIO_InitStructure);
-	/* Configure MISO as Input with internal pull-up */
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_MISO;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
-	GPIO_Init(GPIO_SPI_SD, &GPIO_InitStructure);
+  /* Configure SPI pins: SCK and MOSI with default alternate function (not re-mapped) push-pull */
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_SCK | GPIO_Pin_SPI_SD_MOSI;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+  GPIO_Init( GPIO_SPI_SD, &GPIO_InitStructure );
+  /* Configure MISO as Input with internal pull-up */
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_MISO;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
+  GPIO_Init( GPIO_SPI_SD, &GPIO_InitStructure );
 
-	/* SPI configuration */
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
-	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
-	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256; // 72000kHz/256=281kHz < 400kHz
-	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
-	SPI_InitStructure.SPI_CRCPolynomial = 7;
+  /* SPI configuration */
+  SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+  SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
+  SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
+  SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
+  SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
+  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
+  SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256; // 72000kHz/256=281kHz < 400kHz
+  SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
+  SPI_InitStructure.SPI_CRCPolynomial = 7;
 
-	SPI_Init(SPI_SD, &SPI_InitStructure);
-	SPI_CalculateCRC(SPI_SD, DISABLE);
-	SPI_Cmd(SPI_SD, ENABLE);
+  SPI_Init( SPI_SD, &SPI_InitStructure );
+  SPI_CalculateCRC( SPI_SD, DISABLE );
+  SPI_Cmd( SPI_SD, ENABLE );
 
-	/* drain SPI */
-	while (SPI_I2S_GetFlagStatus(SPI_SD, SPI_I2S_FLAG_TXE) == RESET) { ; }
-	dummyread = SPI_I2S_ReceiveData(SPI_SD);
+  /* drain SPI */
+  while( SPI_I2S_GetFlagStatus( SPI_SD, SPI_I2S_FLAG_TXE ) == RESET ) { ; }
+  dummyread = SPI_I2S_ReceiveData( SPI_SD );
 
 #ifdef STM32_SD_USE_DMA
-	/* enable DMA clock */
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+  /* enable DMA clock */
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 #endif
 }
 
-static
-void power_off (void)
+static void power_off( void )
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_InitTypeDef GPIO_InitStructure;
 
-	if (!(Stat & STA_NOINIT)) {
-		SELECT();
-		wait_ready();
-		release_spi();
-	}
+  if( !( Stat & STA_NOINIT ) )
+  {
+    SELECT();
+    wait_ready();
+    release_spi();
+  }
 
-	SPI_I2S_DeInit(SPI_SD);
-	SPI_Cmd(SPI_SD, DISABLE);
-	RCC_APBPeriphClockCmd_SPI_SD(RCC_APBPeriph_SPI_SD, DISABLE);
+  SPI_I2S_DeInit( SPI_SD );
+  SPI_Cmd( SPI_SD, DISABLE );
+  RCC_APBPeriphClockCmd_SPI_SD( RCC_APBPeriph_SPI_SD, DISABLE );
 
-	/* All SPI-Pins to input with weak internal pull-downs */
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_SCK | GPIO_Pin_SPI_SD_MISO | GPIO_Pin_SPI_SD_MOSI;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPD;
-	GPIO_Init(GPIO_SPI_SD, &GPIO_InitStructure);
+  /* All SPI-Pins to input with weak internal pull-downs */
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_SPI_SD_SCK | GPIO_Pin_SPI_SD_MISO | GPIO_Pin_SPI_SD_MOSI;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPD;
+  GPIO_Init(GPIO_SPI_SD, &GPIO_InitStructure);
 
-	card_power(0);
+  card_power( 0 );
 
-	Stat |= STA_NOINIT;		/* Set STA_NOINIT */
+  Stat |= STA_NOINIT;		/* Set STA_NOINIT */
 }
 
 
@@ -534,36 +536,39 @@ void power_off (void)
 /* Receive a data packet from MMC                                        */
 /*-----------------------------------------------------------------------*/
 
-static
-BOOL rcvr_datablock (
-	BYTE *buff,			/* Data buffer to store received data */
-	UINT btr			/* Byte count (must be multiple of 4) */
-)
+// buff - Data buffer to store received data 
+// btr  - Byte count (must be multiple of 4) 
+static BOOL rcvr_datablock( BYTE* buff, UINT btr )
 {
-	BYTE token;
+  BYTE token;
 
-
-	Timer1 = 10;
-	do {							/* Wait for data packet in timeout of 100ms */
-		token = rcvr_spi();
-	} while ((token == 0xFF) && Timer1);
-	if(token != 0xFE) return FALSE;	/* If not valid data token, return with error */
+  Timer1 = 10;
+  do                       /* Wait for data packet in timeout of 100ms */
+  {							
+    token = rcvr_spi();
+  }
+  while( ( token == 0xFF ) && Timer1 );
+  
+  if( token != 0xFE )
+    return FALSE;	/* If not valid data token, return with error */
 
 #ifdef STM32_SD_USE_DMA
-	stm32_dma_transfer( TRUE, buff, btr );
+  stm32_dma_transfer( TRUE, buff, btr );
 #else
-	do {							/* Receive the data block into buffer */
-		rcvr_spi_m(buff++);
-		rcvr_spi_m(buff++);
-		rcvr_spi_m(buff++);
-		rcvr_spi_m(buff++);
-	} while (btr -= 4);
+  do      /* Receive the data block into buffer */
+  {							
+    rcvr_spi_m( buff++ );
+    rcvr_spi_m( buff++ );
+    rcvr_spi_m( buff++ );
+    rcvr_spi_m( buff++ );
+  }
+  while( btr -= 4 );
 #endif /* STM32_SD_USE_DMA */
 
-	rcvr_spi();						/* Discard CRC */
-	rcvr_spi();
+  rcvr_spi();			/* Discard CRC */
+  rcvr_spi();
 
-	return TRUE;					/* Return with success */
+  return TRUE;		        /* Return with success */
 }
 
 
@@ -573,40 +578,43 @@ BOOL rcvr_datablock (
 /*-----------------------------------------------------------------------*/
 
 #if _FS_READONLY == 0
-static
-BOOL xmit_datablock (
-	const BYTE *buff,	/* 512 byte data block to be transmitted */
-	BYTE token			/* Data/Stop token */
-)
+
+// buff  - 512 byte data block to be transmitted */
+// token - Data/Stop token */
+static BOOL xmit_datablock( const BYTE *buff, BYTE token )
 {
-	BYTE resp;
+  BYTE resp;
 #ifndef STM32_SD_USE_DMA
-	BYTE wc;
+  BYTE wc;
 #endif
 
-	if (wait_ready() != 0xFF) return FALSE;
+  if( wait_ready() != 0xFF )
+    return FALSE;
 
-	xmit_spi(token);					/* transmit data token */
-	if (token != 0xFD) {	/* Is data token */
-
+  xmit_spi( token );		      /* transmit data token */
+  if( token != 0xFD )                 /* Is data token */
+  {	
 #ifdef STM32_SD_USE_DMA
-		stm32_dma_transfer( FALSE, buff, 512 );
+    stm32_dma_transfer( FALSE, buff, 512 );
 #else
-		wc = 0;
-		do {							/* transmit the 512 byte data block to MMC */
-			xmit_spi(*buff++);
-			xmit_spi(*buff++);
-		} while (--wc);
+    wc = 0;
+    do    /* transmit the 512 byte data block to MMC */
+    {							
+      xmit_spi( *buff++ );
+      xmit_spi( *buff++ );
+    }
+    while( --wc );            // crazy ???
 #endif /* STM32_SD_USE_DMA */
 
-		xmit_spi(0xFF);					/* CRC (Dummy) */
-		xmit_spi(0xFF);
-		resp = rcvr_spi();				/* Receive data response */
-		if ((resp & 0x1F) != 0x05)		/* If not accepted, return with error */
-			return FALSE;
-	}
-
-	return TRUE;
+    xmit_spi( 0xFF );			/* CRC (Dummy) */
+    xmit_spi( 0xFF );
+    resp = rcvr_spi();			/* Receive data response */
+    
+    if( (resp & 0x1F ) != 0x05 )	/* If not accepted, return with error */
+      return FALSE;
+  }
+  
+  return TRUE;
 }
 #endif /* _READONLY */
 
@@ -616,48 +624,52 @@ BOOL xmit_datablock (
 /* Send a command packet to MMC                                          */
 /*-----------------------------------------------------------------------*/
 
-static
-BYTE send_cmd (
-	BYTE cmd,		/* Command byte */
-	DWORD arg		/* Argument */
-)
+// cmd - Command byte
+// arg - Argument
+static BYTE send_cmd( BYTE cmd, DWORD arg )
 {
-	BYTE n, res;
+  BYTE n, res;
 
+  if( cmd & 0x80 ) /* ACMD<n> is the command sequence of CMD55-CMD<n> */
+  {	
+    cmd &= 0x7F;
+    res = send_cmd( CMD55, 0 );
+    if( res > 1 )
+      return res;
+  }
 
-	if (cmd & 0x80) {	/* ACMD<n> is the command sequence of CMD55-CMD<n> */
-		cmd &= 0x7F;
-		res = send_cmd(CMD55, 0);
-		if (res > 1) return res;
-	}
+  /* Select the card and wait for ready */
+  DESELECT();
+  SELECT();
+  if( wait_ready() != 0xFF )
+  {
+    return 0xFF;
+  }
 
-	/* Select the card and wait for ready */
-	DESELECT();
-	SELECT();
-	if (wait_ready() != 0xFF) {
-		return 0xFF;
-	}
+  /* Send command packet */
+  xmit_spi( cmd );				/* Start + Command index */
+  xmit_spi( (BYTE)(arg >> 24) );		/* Argument[31..24] */
+  xmit_spi( (BYTE)(arg >> 16) );		/* Argument[23..16] */
+  xmit_spi( (BYTE)(arg >> 8) );			/* Argument[15..8] */
+  xmit_spi( (BYTE)arg );			/* Argument[7..0] */
+  
+  n = 0x01;					/* Dummy CRC + Stop */
+  if( cmd == CMD0 ) n = 0x95;			/* Valid CRC for CMD0(0) */
+  if( cmd == CMD8 ) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
+  xmit_spi( n );
 
-	/* Send command packet */
-	xmit_spi(cmd);						/* Start + Command index */
-	xmit_spi((BYTE)(arg >> 24));		/* Argument[31..24] */
-	xmit_spi((BYTE)(arg >> 16));		/* Argument[23..16] */
-	xmit_spi((BYTE)(arg >> 8));			/* Argument[15..8] */
-	xmit_spi((BYTE)arg);				/* Argument[7..0] */
-	n = 0x01;							/* Dummy CRC + Stop */
-	if (cmd == CMD0) n = 0x95;			/* Valid CRC for CMD0(0) */
-	if (cmd == CMD8) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
-	xmit_spi(n);
+  /* Receive command response */
+  if( cmd == CMD12 )
+    rcvr_spi();		/* Skip a stuff byte when stop reading */
 
-	/* Receive command response */
-	if (cmd == CMD12) rcvr_spi();		/* Skip a stuff byte when stop reading */
+  n = 10;			/* Wait for a valid response in timeout of 10 attempts */
+  do
+  {
+    res = rcvr_spi();
+  }
+  while( ( res & 0x80 ) && --n );
 
-	n = 10;								/* Wait for a valid response in timeout of 10 attempts */
-	do
-		res = rcvr_spi();
-	while ((res & 0x80) && --n);
-
-	return res;			/* Return with the response value */
+  return res;			/* Return with the response value */
 }
 
 
@@ -673,53 +685,76 @@ BYTE send_cmd (
 /* Initialize Disk Drive                                                 */
 /*-----------------------------------------------------------------------*/
 
-DSTATUS disk_initialize (
-	BYTE drv		/* Physical drive number (0) */
-)
+// drv - Physical drive number (0) 
+DSTATUS disk_initialize( BYTE drv )
 {
-	BYTE n, cmd, ty, ocr[4];
+  BYTE n, cmd, ty, ocr[4];
 
-	if (drv) return STA_NOINIT;			/* Supports only single drive */
-	if (Stat & STA_NODISK) return Stat;	/* No card in the socket */
+  if( drv)                  /* Supports only single drive */
+    return STA_NOINIT;	 
+  
+  if( Stat & STA_NODISK )   /* No card in the socket */
+    return Stat;	         
 
-	power_on();							/* Force socket power on and initialize interface */
-	interface_speed(INTERFACE_SLOW);
-	for (n = 10; n; n--) rcvr_spi();	/* 80 dummy clocks */
+  power_on();							/* Force socket power on and initialize interface */
+  interface_speed( INTERFACE_SLOW );
+  
+  for( n = 10; n; n-- ) 
+    rcvr_spi();	/* 80 dummy clocks */
 
-	ty = 0;
-	if (send_cmd(CMD0, 0) == 1) {			/* Enter Idle state */
-		Timer1 = 100;						/* Initialization timeout of 1000 milliseconds */
-		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDHC */
-			for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();		/* Get trailing return value of R7 response */
-			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* The card can work at VDD range of 2.7-3.6V */
-				while (Timer1 && send_cmd(ACMD41, 1UL << 30));	/* Wait for leaving idle state (ACMD41 with HCS bit) */
-				if (Timer1 && send_cmd(CMD58, 0) == 0) {		/* Check CCS bit in the OCR */
-					for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();
-					ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;
-				}
-			}
-		} else {							/* SDSC or MMC */
-			if (send_cmd(ACMD41, 0) <= 1) 	{
-				ty = CT_SD1; cmd = ACMD41;	/* SDSC */
-			} else {
-				ty = CT_MMC; cmd = CMD1;	/* MMC */
-			}
-			while (Timer1 && send_cmd(cmd, 0));			/* Wait for leaving idle state */
-			if (!Timer1 || send_cmd(CMD16, 512) != 0)	/* Set R/W block length to 512 */
-				ty = 0;
-		}
-	}
-	CardType = ty;
-	release_spi();
+  ty = 0;
+  if( send_cmd( CMD0, 0 ) == 1 )                                /* Enter Idle state */
+  {			
+    Timer1 = 100;						/* Initialization timeout of 1000 milliseconds */
+    if( send_cmd( CMD8, 0x1AA ) == 1 ) /* SDHC */
+    {	
+      for( n = 0; n < 4; n++ )                      /* Get trailing return value of R7 response */
+        ocr[n] = rcvr_spi();
+      
+      if( ocr[2] == 0x01 && ocr[3] == 0xAA )        /* The card can work at VDD range of 2.7-3.6V */
+      {				
+        while( Timer1 && send_cmd( ACMD41, 1UL << 30 ) );	/* Wait for leaving idle state (ACMD41 with HCS bit) */
+        if( Timer1 && send_cmd( CMD58, 0 ) == 0 )              /* Check CCS bit in the OCR */
+        {		
+          for( n = 0; n < 4; n++ )
+            ocr[n] = rcvr_spi();
+          ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;
+        }
+      }
+    }
+    else        /* SDSC or MMC */
+    {							
+      if( send_cmd( ACMD41, 0 ) <= 1 )  /* SDSC */
+      {
+        ty = CT_SD1;
+        cmd = ACMD41;	
+      } 
+      else                              /* MMC */
+      {
+        ty = CT_MMC;
+        cmd = CMD1;	
+      }
+      
+      while( Timer1 && send_cmd( cmd, 0 ) );			/* Wait for leaving idle state */
+      if( !Timer1 || send_cmd( CMD16, 512 ) != 0 )	/* Set R/W block length to 512 */
+        ty = 0;
+    }
+  }
+  
+  CardType = ty;
+  release_spi();
 
-	if (ty) {			/* Initialization succeeded */
-		Stat &= ~STA_NOINIT;		/* Clear STA_NOINIT */
-		interface_speed(INTERFACE_FAST);
-	} else {			/* Initialization failed */
-		power_off();
-	}
+  if( ty )                       /* Initialization succeeded */
+  {			
+    Stat &= ~STA_NOINIT;		/* Clear STA_NOINIT */
+    interface_speed(INTERFACE_FAST);
+  }
+  else                         /* Initialization failed */
+  {			
+    power_off();
+  }
 
-	return Stat;
+  return Stat;
 }
 
 
@@ -962,33 +997,37 @@ DRESULT disk_ioctl (
 
 RAMFUNC void disk_timerproc (void)
 {
-	static DWORD pv;
-	DWORD ns;
-	BYTE n, s;
+  static DWORD pv;
+  DWORD ns;
+  BYTE n, s;
 
+  n = Timer1;                /* 100Hz decrement timers */
+  if( n )
+    Timer1 = --n;
+  
+  n = Timer2;
+  if( n ) 
+    Timer2 = --n;
 
-	n = Timer1;                /* 100Hz decrement timers */
-	if (n) Timer1 = --n;
-	n = Timer2;
-	if (n) Timer2 = --n;
+  ns = pv;
+  pv = socket_is_empty(); // | socket_is_write_protected();	/* Sample socket switch */
 
-	ns = pv;
-	pv = socket_is_empty();// | socket_is_write_protected();	/* Sample socket switch */
+  // only clear Stat  - ???
+  if( ns == pv )          /* Have contacts stabled? */
+  {                         
+    s = Stat;
 
-	if (ns == pv) {                         /* Have contacts stabled? */
-		s = Stat;
+//   if( pv & socket_state_mask_wp )      /* WP is H (write protected) */
+//     s |= STA_PROTECT;
+//   else                                 /* WP is L (write enabled) */
+//     s &= ~STA_PROTECT;
 
-//		if (pv & socket_state_mask_wp)      /* WP is H (write protected) */
-//			s |= STA_PROTECT;
-//		else                                /* WP is L (write enabled) */
-//			s &= ~STA_PROTECT;
+    if( pv & socket_state_mask_cp )        /* INS = H (Card inserted) */
+      s |= (STA_NODISK ); //| STA_NOINIT);
+    else                                   /* INS = L (Socket empty) */
+      s = 0;              //~STA_NODISK;
 
-		if (pv & socket_state_mask_cp)      /* INS = H (Card inserted) */
-			s |= (STA_NODISK );//| STA_NOINIT);
-		else                                /* INS = L (Socket empty) */
-			s = 0;//~STA_NODISK;
-
-		Stat = s;
-	}
+    Stat = s;
+  }
 }
 

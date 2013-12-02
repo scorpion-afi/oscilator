@@ -281,10 +281,4 @@ void TIM5_IRQHandler(void)
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
 }
 
-
-
-//*******************************************************************************
-
-
-
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
