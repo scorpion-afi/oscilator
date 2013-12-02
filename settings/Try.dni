@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-320755447
+Checksum=-1233317787
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -93,9 +93,9 @@ mode=0
 Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\startup_stm32f10x_hd.s}.453.1" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "0x08000004" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "0x08000A62" 0 0 1 "" 0 "" 0
-Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\Libraries\FatFS\sd_spi_stm32.c}.744.3" 0 0 1 "" 0 "" 0
-Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.27.3" 0 0 1 "" 0 "" 0
-Bp5=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.59.3" 0 0 1 "" 0 "" 0
+Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.59.3" 0 0 1 "" 0 "" 0
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.45.3" 0 0 1 "" 0 "" 0
+Bp5=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\stm32f10x_it.c}.301.3" 0 0 1 "" 0 "" 0
 Count=6
 [Log file]
 LoggingEnabled=_ 0

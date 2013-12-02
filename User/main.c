@@ -42,7 +42,7 @@ int init_sd( void )
   DSTATUS card_status = 0;
   FRESULT res = FR_OK; 
   
-  //card_status = disk_initialize( 0 );
+  card_status = disk_initialize( 0 );
   if( card_status )
   {
     return 1;
@@ -55,7 +55,7 @@ int init_sd( void )
   }
 
   // creates file with name FILE_NAME and open it for write
-  res = f_open( &file, "0:readmea.txt", FA_WRITE | FA_CREATE_ALWAYS ); 
+  res = f_open( &file, "0:readme.txt", FA_WRITE | FA_CREATE_ALWAYS ); 
   if( res )
   {
     return 3;    
@@ -103,7 +103,7 @@ void init_TIM5( void )
   NVIC_InitTypeDef          NVIC_InitStructure;
   TIM_TimeBaseInitTypeDef   TIM_TimeBaseInitStruct;
    
-  socket_cp_init(); 
+  //socket_cp_init(); 
     
   // Enable TIM5 clocks
   RCC->APB1ENR |=  0x08;
