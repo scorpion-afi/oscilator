@@ -175,7 +175,7 @@ void SysTick_Handler(void)
   * @}
   */
 
-
+/*
 //Обработчик прерываний от таймера TIM2. 
 //==============================================================================
 void TIM2_IRQHandler(void)
@@ -270,7 +270,7 @@ void DMA1_Channel1_IRQHandler( void )
  
   //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
   DMA1->IFCR |= 1; //DMA1_IT_GL1;
-}
+}*/
 /*
 int a = 1;
 //Обработчик прерываний от таймера TIM5. (10 ms)     ___ for FatFS purpose ___

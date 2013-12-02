@@ -9,21 +9,22 @@
 #include "diskio.h"
 #include "ff.h"
 
-int          init_sd( void );
 void         init_TIM5( void );
+int          init_sd( void );
 unsigned int write( const void* data, unsigned int num );
-extern void  socket_cp_init( void );
 
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
 
 char* str = "hello afi";
+char recv[10];
 
 //точка входа
 //=======================================================================================
-int main( void )
-{   
+int main()
+{
   init_TIM5(); 
+  
   init_sd();
   
   write( str, 9 );
@@ -33,68 +34,6 @@ int main( void )
     ;
   }
 }
-
-// initialization of sd thread
-// return 0, if all is ok
-//==============================================================================
-int init_sd( void )
-{
-  DSTATUS card_status = 0;
-  FRESULT res = FR_OK; 
-  
-  card_status = disk_initialize( 0 );
-  if( card_status )
-  {
-    return 1;
-  }
-   
-  res = f_mount( 0, &fs );   // mounts disk 0 with fs           
-  if( res )
-  {
-    return 2;    
-  }
-
-  // creates file with name FILE_NAME and open it for write
-  res = f_open( &file, "0:readme.txt", FA_WRITE | FA_CREATE_ALWAYS ); 
-  if( res )
-  {
-    return 3;    
-  } 
-  
-  return 0;
-}
-
-// data - pointer to data to be written on sd-card
-// num - size of data in bytes !!!
-// return 0, if all is ok
-//==============================================================================
-unsigned int write( const void* data, unsigned int num )
-{
-  UINT len = 0;                  // len will storage number of real written bytes
-  FRESULT res = FR_OK; 
-
-  // writes num bytes of data to file
-  res = f_write( &file, data, num, &len );
-  if( res )
-  {
-    return 1;    //if some error was occured
-  }
-  
-  if( num != len )
-  {
-    return 2;    //if some error was occured
-  }
-
-  f_close( &file );  
-  
-  return 0; 
-}
-
-
-//==============================================================================
-//==============================================================================
-//==============================================================================
-
 
 // initialize TIM5 for FAT_FS purpose
 //==============================================================================
@@ -132,4 +71,67 @@ void init_TIM5( void )
   
   // Enable TIM5 Update interrupt
   TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );
+}
+
+// initialization of sd thread
+// return 0, if all is ok
+//==============================================================================
+int init_sd( void )
+{
+  DSTATUS card_status = 0;
+  FRESULT res = FR_OK; 
+  
+  card_status = disk_initialize( 0 );
+  if( card_status )
+  {
+    return 1;
+  }
+   
+  res = f_mount( 0, &fs );   // mounts disk 0 with fs           
+  if( res )
+  {
+    return 2;    
+  }
+
+  // creates file with name FILE_NAME and open it for write
+  res = f_open( &file, "0:al.txt", FA_WRITE | FA_READ | FA_OPEN_EXISTING ); 
+  
+  if( res )
+  {
+    return 3;    
+  } 
+  
+  UINT a;
+  res = f_read( &file, recv, 10, &a );
+  
+  res++;
+  
+  return 0;
+}
+
+// data - pointer to data to be written on sd-card
+// num - size of data in bytes !!!
+// return 0, if all is ok
+//==============================================================================
+unsigned int write( const void* data, unsigned int num )
+{
+  UINT len = 0;                  // len will storage number of real written bytes
+  FRESULT res = FR_OK; 
+
+  // writes num bytes of data to file
+  res = f_write( &file, data, num, &len );
+  if( res )
+  {
+    return 1;    //if some error was occured
+  }
+  f_sync( &file );
+  
+  if( num != len )
+  {
+    return 2;    //if some error was occured
+  }
+
+  res = f_close( &file );  
+  
+  return 0; 
 }
