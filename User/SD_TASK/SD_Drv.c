@@ -59,14 +59,17 @@ unsigned int write( const void* data, unsigned int num )
   res = f_write( &file, data, num, &len );
   if( res )
   {
+    f_close( &file );
     return 1;    //if some error was occured
   }
   
   if( num != len )
   {
+    f_close( &file );
     return 2;    //if some error was occured
   }
   
+  f_close( &file );
   return 0; 
 }
 
