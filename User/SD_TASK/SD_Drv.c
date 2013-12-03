@@ -7,7 +7,7 @@
 #include "diskio.h"  // for DSTATUS
 #include "ff.h"
 
-#define FILE_NAME "0:why.m"
+#define FILE_NAME "0:afib.m"
 
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
@@ -15,7 +15,7 @@ FIL file;       // file object
 // initialization of sd thread
 // return 0, if all is ok
 //==============================================================================
-int init_sd( void )
+unsigned int init_sd( void )
 {
   DSTATUS card_status = 0;
   FRESULT res = FR_OK; 
@@ -25,13 +25,17 @@ int init_sd( void )
   {
     return 1;
   }
-   
+  
+  for(int i = 0; i < 10000; i++ );
+
   res = f_mount( 0, &fs );   // mounts disk 0 with fs           
   if( res )
   {
     return 2;    
   }
-  
+   
+  for(int i = 0; i < 10000; i++ );
+ 
   // opens/creates file with name FILE_NAME
   // FA_OPEN_ALWAYS - Opens the file if it is existing. If not, a new file is created.
   // FA_WRITE | FA_READ - Data can be read/written from/to the file.
@@ -41,6 +45,9 @@ int init_sd( void )
     return 3;    
   } 
  
+  //FILINFO fil_info;
+  //res = f_stat( FILE_NAME, &fil_info );
+  
   return 0;
 }
 

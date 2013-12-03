@@ -47,7 +47,7 @@
 #include "diskio.h"
 
 // demo uses a command line option to define this (see Makefile):
-// #define STM32_SD_USE_DMA
+//#define STM32_SD_USE_DMA
 
 
 #ifdef STM32_SD_USE_DMA
@@ -357,8 +357,8 @@ static void release_spi( void )
 static
 void stm32_dma_transfer(
 	BOOL receive,		/* FALSE for buff->SPI, TRUE for SPI->buff               */
-	const BYTE *buff,	/* receive TRUE  : 512 byte data block to be transmitted
-						   receive FALSE : Data buffer to store received data    */
+	const BYTE *buff,	/* receive TRUE  : Data buffer to store received data
+						   receive FALSE : 512 byte data block to be transmitted    */
 	UINT btr 			/* receive TRUE  : Byte count (must be multiple of 2)
 						   receive FALSE : Byte count (must be 512)              */
 )
