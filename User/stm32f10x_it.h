@@ -40,10 +40,10 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
-void TIM2_IRQHandler(void);
+//void TIM2_IRQHandler(void);
 
-void DMA2_Channel3_IRQHandler(void);     //DAC_Channel1
-void DMA1_Channel1_IRQHandler( void ); 
+//void DMA2_Channel3_IRQHandler(void);     //DAC_Channel1
+//void DMA1_Channel1_IRQHandler( void ); 
 
 void TIM5_IRQHandler(void);
 		

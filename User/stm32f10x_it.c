@@ -22,17 +22,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
-
+/*
 #include "InterDefines.h"   // определение sOscParam and S_Sd_Param_t
 #include "CommonDefines.h"  // for using FreeRTOS functions and types
 
 // for use pointer p_beg_adc_buff
 #include "Meas_Drv.h" 
-
+*/
 // for disk_timerproc() calling
 #include "diskio.h"
 
-#include "stm32f10x.h"
+//#include "stm32f10x.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Examples
   * @{
@@ -175,7 +175,7 @@ void SysTick_Handler(void)
   * @}
   */
 
-
+/*
 //Обработчик прерываний от таймера TIM2. 
 //==============================================================================
 void TIM2_IRQHandler(void)
@@ -271,14 +271,14 @@ void DMA1_Channel1_IRQHandler( void )
   //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
   DMA1->IFCR |= 1; //DMA1_IT_GL1;
 }
-
+*/
 //Обработчик прерываний от таймера TIM5. (10 ms)     ___ for FatFS purpose ___
 //==============================================================================
 void TIM5_IRQHandler(void)
 { 
   disk_timerproc();
   
-  TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
+  TIM_ClearITPendingBit( TIM5, TIM_IT_Update );	//__Clear TIM5 update interrupt__
 }
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

@@ -7,7 +7,7 @@
 #include "diskio.h"  // for DSTATUS
 #include "ff.h"
 
-#define FILE_NAME "0:scor.txt"
+#define FILE_NAME "0:why.m"
 
 FATFS fs;       // main FAT_FS struct
 FIL file;       // file object
