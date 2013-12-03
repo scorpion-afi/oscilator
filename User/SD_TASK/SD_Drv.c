@@ -40,7 +40,7 @@ int init_sd( void )
   {
     return 3;    
   } 
-  
+ 
   return 0;
 }
 
@@ -64,6 +64,22 @@ unsigned int write( const void* data, unsigned int num )
   return f_sync( &file ); // flushes the cached information of a writing file 
 }
 
+// data - pointer to data to be read from sd-card
+// num - size of buffer in bytes !!!
+// return 0, if all is ok
+//==============================================================================
+unsigned int read( void* buf, unsigned int num )
+{
+  UINT len = 0;
+  FRESULT res = 0;
+  
+  res = f_read( &file, buf, num, &len );
+  
+  if( res || ( len != num ) )
+    return 1;
+  
+  return 0;
+}
 
 //==============================================================================
 //==============================================================================

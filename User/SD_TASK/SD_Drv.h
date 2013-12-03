@@ -11,6 +11,7 @@
   GLB_SDDrv void init_TIM5( void );
   GLB_SDDrv void de_init_TIM5( void );
   GLB_SDDrv unsigned int write( const void* data, unsigned int num );
+  GLB_SDDrv unsigned int read( void* buf, unsigned int num );
   
 #ifdef SDDrv   
 

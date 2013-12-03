@@ -7,11 +7,11 @@
 #include "main.h"
 
 #include "SD_Drv.h"
-
-#include "stm32f10x.h"
+#include "Meas_Drv.h"         // for using measuring driver functions
 
 char adc_array[4096];
-int write_fail;
+char dac_array[4096];
+int write_fail_cnt;
 
 //точка входа
 //=======================================================================================
@@ -20,13 +20,15 @@ int main()
   init_TIM5();
   init_sd();
   
+  read( dac_array, sizeof( dac_array ) );
+  
   for( int i = 0; i < sizeof( adc_array ); i++ ) 
     adc_array[i] = i%256;
       
   for( int j = 0; j < 1000; j++ )               // 4Mb
   {
     if( write( adc_array, sizeof( adc_array ) ) )
-      write_fail++;
+      write_fail_cnt++;
   }
   
   
