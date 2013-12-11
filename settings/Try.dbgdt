@@ -46,14 +46,14 @@
           
           
           
-        <Position>4</Position><ScreenPosX>1412</ScreenPosX><ScreenPosY>169</ScreenPosY><Windows/></PreferedWindows>
+        <Position>4</Position><ScreenPosX>1400</ScreenPosX><ScreenPosY>133</ScreenPosY><Windows/></PreferedWindows>
       </Register>
       <WATCH_1>
         <expressions>
           
           
           
-        <item>ns</item><item>pv</item><item>Stat</item><item></item></expressions>
+        <item>write_fail</item><item>adc_array</item><item>dac_array</item><item>write_fail_cnt</item><item>fil_info</item><item/></expressions>
         <col-names>
           
           
@@ -99,20 +99,20 @@
       
       
       
-    <Wnd2><Tabs><Tab><Identity>TabID-7452-10121</Identity><TabName>Watch 1</TabName><Factory>WATCH_1</Factory></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2></Windows>
+    <Wnd2><Tabs><Tab><Identity>TabID-20904-21025</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-28809-26403</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>5</Group><States>0</States></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>862</SelStart><SelEnd>862</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\sd_spi_stm32.c</Filename><XPos>0</XPos><YPos>120</YPos><SelStart>21322</SelStart><SelEnd>21322</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>284</YPos><SelStart>7930</SelStart><SelEnd>7930</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Task.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>446</SelStart><SelEnd>446</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>7</YPos><SelStart>485</SelStart><SelEnd>485</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>18</YPos><SelStart>514</SelStart><SelEnd>514</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>274</YPos><SelStart>7738</SelStart><SelEnd>7738</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Drv.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>249</SelStart><SelEnd>249</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Drv.c</Filename><XPos>0</XPos><YPos>156</YPos><SelStart>5400</SelStart><SelEnd>5400</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\sd_spi_stm32.c</Filename><XPos>0</XPos><YPos>447</YPos><SelStart>15172</SelStart><SelEnd>15173</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>369</SelStart><SelEnd>369</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-013d6888><key>iaridepm.enu1</key></Toolbar-013d6888></Sizes></Row0><Row1><Sizes><Toolbar-0702b848><key>debuggergui.enu1</key></Toolbar-0702b848></Sizes></Row1></Top><Left><Row0><Sizes/></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013d66f0><key>iaridepm.enu1</key></Toolbar-013d66f0></Sizes></Row0><Row1><Sizes><Toolbar-084d4458><key>debuggergui.enu1</key></Toolbar-084d4458></Sizes></Row1></Top><Left><Row0><Sizes/></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>200</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes><Wnd3><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>7667820</Right><x>-2</x><y>-2</y><FloatX>1400</FloatX><FloatY>133</FloatY><FloatWidth>362</FloatWidth><FloatHeight>724</FloatHeight><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>107181</sizeHorzCX><sizeHorzCY>193424</sizeHorzCY><sizeVertCX>107181</sizeVertCX><sizeVertCY>193424</sizeVertCY></Rect></Wnd3></Sizes></Float></Positions>
   </Desktop>
 </Project>
 
