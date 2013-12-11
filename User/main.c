@@ -10,15 +10,13 @@
 #include "Meas_Drv.h"         // for using measuring driver functions
 
 unsigned int must_write;
-
+unsigned int res;
+int first_half;  
  
-
 //точка входа
 //=======================================================================================
 int main( void )
 {  
-  unsigned int res;
-   int first_half;  
   first_half = 1;
   
   init_TIM5();
@@ -32,8 +30,7 @@ int main( void )
   while( 1 )
   {
     if( must_write )
-    {
-      
+    {    
       if( first_half )
       {
         first_half = 0;
