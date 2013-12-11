@@ -87,15 +87,6 @@ ShowSource=1
 Fmt0=uint32_t[512]	4	0
 [watch_formats]
 Fmt0={W}0:kyky	4	0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\startup_stm32f10x_hd.s}.453.1" 0 0 1 "" 0 "" 0
-Bp1=_ 0 "EMUL_CODE" "0x08000004" 0 0 1 "" 0 "" 0
-Bp2=_ 0 "EMUL_CODE" "0x08000A62" 0 0 1 "" 0 "" 0
-Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\stm32f10x_it.c}.183.3" 0 0 1 "" 0 "" 0
-Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\SD_TASK\SD_Task.c}.34.5" 0 0 1 "" 0 "" 0
-Count=5
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -103,9 +94,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Aliases]
-Count=0
-SuppressDialog=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -113,3 +101,15 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\startup_stm32f10x_hd.s}.453.1" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "0x08000004" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "0x08000A62" 0 0 1 "" 0 "" 0
+Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\stm32f10x_it.c}.284.5" 0 0 1 "" 0 "" 0
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.27.3" 0 0 1 "" 0 "" 0
+Count=5
+[Aliases]
+Count=0
+SuppressDialog=0
