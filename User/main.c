@@ -9,36 +9,43 @@
 #include "SD_Drv.h"
 #include "Meas_Drv.h"         // for using measuring driver functions
 
-char adc_array[4096];
-char dac_array[4096];
-int write_fail_cnt;
+unsigned int must_write;
 
-unsigned int res = 0;
-  
+ 
+
 //точка входа
 //=======================================================================================
-int main()
+int main( void )
 {  
+  unsigned int res;
+   int first_half;  
+  first_half = 1;
+  
   init_TIM5();
-  for(int i = 0; i < 10000; i++ );
   res = init_sd();
   
   if( !res )
   { 
-    //read( dac_array, sizeof( dac_array ) );
-    
-    for( int i = 0; i < sizeof( adc_array ); i++ )
-      adc_array[i] = i%256;
-        
-    for( int j = 0; j < 1000; j++ )               // 4Mb
-    {
-      if( write( adc_array, sizeof( adc_array ) ) )
-        write_fail_cnt++;
-    }
+    start();
   }
   
   while( 1 )
   {
-    ;
+    if( must_write )
+    {
+      
+      if( first_half )
+      {
+        first_half = 0;
+        write( p_beg_adc_buff, 4096 );
+      }
+      else
+      {
+        first_half = 1;
+        write( p_beg_adc_buff + ADC_NUM_DIV_2, 4096 );
+      }          
+      
+      must_write = 0;
+    }  
   }
 }

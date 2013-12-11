@@ -32,6 +32,8 @@
 // for disk_timerproc() calling
 #include "diskio.h"
 
+extern unsigned int must_write;
+
 //#include "stm32f10x.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Examples
@@ -272,6 +274,20 @@ void DMA1_Channel1_IRQHandler( void )
   DMA1->IFCR |= 1; //DMA1_IT_GL1;
 }
 */
+
+//Обработчик прерываний от DMA1_Channel1 
+// will be called with 195 Hz frequence
+//==============================================================================
+void DMA1_Channel1_IRQHandler( void )  
+{
+  if( must_write )
+    must_write = 2;     // do not have time 
+  
+  must_write = 1;
+  
+  //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
+  DMA1->IFCR |= 1; //DMA1_IT_GL1;  
+}
 //Обработчик прерываний от таймера TIM5. (10 ms)     ___ for FatFS purpose ___
 //==============================================================================
 void TIM5_IRQHandler(void)

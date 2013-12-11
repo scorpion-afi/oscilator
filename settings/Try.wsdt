@@ -35,7 +35,7 @@
           
           
           
-        <Position>4</Position><ScreenPosX>1400</ScreenPosX><ScreenPosY>133</ScreenPosY><Windows/></PreferedWindows>
+        <Position>4</Position><ScreenPosX>1405</ScreenPosX><ScreenPosY>158</ScreenPosY><Windows/></PreferedWindows>
       </Register>
     <WATCH_1><PreferedWindows><Position>4</Position><ScreenPosX>1027</ScreenPosX><ScreenPosY>352</ScreenPosY><Windows/></PreferedWindows></WATCH_1><Find-in-Files><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows><ColumnWidth0>712</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files><Debug-Log><ColumnWidth0>33</ColumnWidth0><ColumnWidth1>1208</ColumnWidth1></Debug-Log><Breakpoints><col-names><item>Breakpoint</item><item>_I0</item></col-names><col-widths><item>500</item><item>35</item></col-widths><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Breakpoints></Static>
     <Windows>
@@ -49,7 +49,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>Try</ExpandedNode><ExpandedNode>Try/User</ExpandedNode><ExpandedNode>Try/User/Meas_Task</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>Try</ExpandedNode><ExpandedNode>Try/FatFS</ExpandedNode><ExpandedNode>Try/User</ExpandedNode><ExpandedNode>Try/User/Meas_Task</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -69,14 +69,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>15</YPos><SelStart>489</SelStart><SelEnd>489</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>256</YPos><SelStart>7689</SelStart><SelEnd>7689</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\sd_spi_stm32.c</Filename><XPos>0</XPos><YPos>42</YPos><SelStart>2383</SelStart><SelEnd>2383</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>26</YPos><SelStart>1045</SelStart><SelEnd>1045</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Task.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>855</SelStart><SelEnd>864</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\main.c</Filename><XPos>0</XPos><YPos>2</YPos><SelStart>382</SelStart><SelEnd>382</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>274</YPos><SelStart>7782</SelStart><SelEnd>7782</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Drv.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>249</SelStart><SelEnd>249</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\Meas_Task\Meas_Drv.c</Filename><XPos>0</XPos><YPos>156</YPos><SelStart>5400</SelStart><SelEnd>5400</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Libraries\FatFS\sd_spi_stm32.c</Filename><XPos>0</XPos><YPos>447</YPos><SelStart>15355</SelStart><SelEnd>15355</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\User\SD_TASK\SD_Drv.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>369</SelStart><SelEnd>369</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-013d6888><key>iaridepm.enu1</key></Toolbar-013d6888></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>770</Bottom><Right>423</Right><x>-2</x><y>-2</y><xscreen>415</xscreen><yscreen>387</yscreen><sizeHorzCX>222401</sizeHorzCX><sizeHorzCY>374275</sizeHorzCY><sizeVertCX>227760</sizeVertCX><sizeVertCY>746615</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>220</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>222</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>214700</sizeHorzCY><sizeVertCX>222401</sizeVertCX><sizeVertCY>374275</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013d66f0><key>iaridepm.enu1</key></Toolbar-013d66f0></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>770</Bottom><Right>423</Right><x>-2</x><y>-2</y><xscreen>415</xscreen><yscreen>387</yscreen><sizeHorzCX>222401</sizeHorzCX><sizeHorzCY>374275</sizeHorzCY><sizeVertCX>227760</sizeVertCX><sizeVertCY>746615</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>220</Bottom><Right>1868</Right><x>-2</x><y>-2</y><xscreen>1870</xscreen><yscreen>222</yscreen><sizeHorzCX>1002144</sizeHorzCX><sizeHorzCY>214700</sizeHorzCY><sizeVertCX>222401</sizeVertCX><sizeVertCY>374275</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

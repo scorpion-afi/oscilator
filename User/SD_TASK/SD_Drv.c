@@ -25,16 +25,12 @@ unsigned int init_sd( void )
   {
     return 1;
   }
-  
-  for(int i = 0; i < 10000; i++ );
 
   res = f_mount( 0, &fs );   // mounts disk 0 with fs           
   if( res )
   {
     return 2;    
   }
-   
-  for(int i = 0; i < 10000; i++ );
  
   // opens/creates file with name FILE_NAME
   // FA_OPEN_ALWAYS - Opens the file if it is existing. If not, a new file is created.
