@@ -192,7 +192,7 @@ void sd_control( unsigned char is_on )
   
   if( ( is_on != 0 ) && ( is_on != 1 ) ) return;
   
-  sd_param.type = is_on;  // SD_STOP = 0, SD_START = 1
+  sd_param.type = (sd_type_t)is_on;  // SD_STOP = 0, SD_START = 1
   
   xQueueSend( queu_to_sd, (void *)&sd_param, portMAX_DELAY );
 }

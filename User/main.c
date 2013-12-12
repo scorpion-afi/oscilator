@@ -36,7 +36,7 @@ int main()
   SendString( "Loading...", 5, 1 );
   for( int i = 0; i < 3600000; i++ );
   
-  lock_send_message_to_sd_thread = 1;
+  init_common();    
   
   //по требованиям FreeRTOS
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
@@ -49,6 +49,14 @@ int main()
   }  
   
   return 0;
+}
+
+//                       
+//===================================================================================
+void init_common( void )
+{
+  lock_send_message_to_calc_thread = 0;
+  lock_send_message_to_sd_thread = 1;
 }
 
 // Создаем обьекты ОС

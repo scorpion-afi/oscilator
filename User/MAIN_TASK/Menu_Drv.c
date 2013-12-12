@@ -928,17 +928,19 @@ void MenuStateMach(char ButNum, char EventType, char isKeyPad)
         if( is_sd_write_mode == 0 )
         {        
           // switch on sd write mode
-          is_sd_write_mode = 1;
           
-          // sends a message to START write data to sd card
+          // setting is_sd_write_mode is occured in sd_thread
+          
+          // sends a message START to sd_thread
           sd_control( 1 );
         }
         else
         {
           // switch off sd write mode
-          is_sd_write_mode = 0;
-                     
-          // sends a message to STOP write data to sd card
+          
+          // clearing is_sd_write_mode is occured in sd_thread
+                  
+          // sends a message STOP to sd_thread
           sd_control( 0 );                
         }
       }

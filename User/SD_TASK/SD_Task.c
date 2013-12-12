@@ -9,19 +9,16 @@
 #include "InterDefines.h"    // for S_Sd_Param_t
 #include "CommonDefines.h"    //for interaction with FreeRTOS
 
+// to synchronize acces to sd_thread from synchronous user_button action and 
+// asynchronous extern signal
+extern unsigned char is_sd_write_mode; 
+
 // function-thread (task), that serves requests from DMA1 iterrupt
 //==============================================================================
 void vSDTask( void* pvParameters )
 { 
   S_Sd_Param_t message;
    
-  if( init_sd() ) // if init of sd card is failed
-  {
-     de_init_TIM5();
-     vTaskDelete( NULL );
-     return;  // ?
-  }
-  
   while( 1 )
   {
     // waiting for messages from ISR or another sources
@@ -32,16 +29,29 @@ void vSDTask( void* pvParameters )
       case SD_STOP:
       {
         close_file();
+        
+        de_init_TIM5();
+        
         //write_file();  //write close time
-        lock_send_message_to_sd_thread = 1; // disallow to send message from DMA 1 ch1 ISR to sd thread
+        
+        lock_send_message_to_sd_thread = 1; // disallow to send message from DMA 1 ch1 ISR to sd_thread
+        is_sd_write_mode = 0;
       }
       break;
       
       case SD_START:
       {
+        if( init_sd() ) // if init of sd card is failed
+        {
+          de_init_TIM5();
+          break;
+        }
+        
         open_file();
         //write_file();  //write open time
-        lock_send_message_to_sd_thread = 0; // allow to send message from DMA 1 ch1 ISR to sd thread    
+        
+        lock_send_message_to_sd_thread = 0; // allow to send message from DMA 1 ch1 ISR to sd_thread 
+        is_sd_write_mode = 1;
       }
       break;
       

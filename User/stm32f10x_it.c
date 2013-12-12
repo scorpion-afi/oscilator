@@ -234,13 +234,9 @@ void DMA1_Channel1_IRQHandler( void )
   static unsigned int counter;
   S_Sd_Param_t sd_param;
   
-  portBASE_TYPE rez = pdFALSE;  // обязятельно !!!
-  portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
-  
-  sd_param.type = SD_WRITE;
-  sd_param.num = ADC_NUM;   // size in bytes !!!
-  sd_param.time = 0x1109;   // any, while   
-   
+  portBASE_TYPE rez;
+  portBASE_TYPE rez_1;
+     
   if( DMA1->ISR & 0x04 )    //( 1 << 2 )
   {
     sd_param.data = (void*)(p_beg_adc_buff);
@@ -252,15 +248,24 @@ void DMA1_Channel1_IRQHandler( void )
   
   // message to Calc Task will be sent three times per seconds
   if( ( ++counter > FPS ) && ( lock_send_message_to_calc_thread  == 0 ) )
-  {       
+  {    
+    counter = 0; 
+    
+    rez = pdFALSE;  // обязятельно !!!
+    
     // sends a message to display results of measuring
     xQueueSendFromISR( queu_to_calc, (void *)&(sd_param.data), &rez );
-    counter = 0;
   }
   
   // message to SD thread, to write on sd card, will be send only when allowed
   if( !lock_send_message_to_sd_thread )
   {
+    rez_1 = pdFALSE;  // обязятельно !!!
+    
+    sd_param.type = SD_WRITE;
+    sd_param.num = ADC_NUM;   // size in bytes !!!
+    sd_param.time = 0x1109;   // any, while   
+    
     // sends a message to write data to sd card
     xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
    

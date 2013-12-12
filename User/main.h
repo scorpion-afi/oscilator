@@ -16,6 +16,9 @@
  #include "CommonDefines.h"  //для взаимодействия с FreeRTOS
 
  // Закрытые прототипы функций -----------------------------------------------
+  
+ //
+ void init_common( void );
 
  // Создаем обьекты ОС
  int Create_OS_Objects(void);
