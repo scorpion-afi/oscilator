@@ -20,6 +20,9 @@
  //
  void init_common( void );
 
+ //
+ void init_exti( void );
+
  // Создаем обьекты ОС
  int Create_OS_Objects(void);
  

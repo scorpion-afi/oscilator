@@ -46,6 +46,8 @@ void DMA2_Channel3_IRQHandler(void);     //DAC_Channel1
 void DMA1_Channel1_IRQHandler( void ); 
 
 void TIM5_IRQHandler(void);
+
+void EXTI4_IRQHandler(void);
 		
 #endif /* __STM32F10x_IT_H */
 

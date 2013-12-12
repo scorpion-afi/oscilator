@@ -182,7 +182,7 @@ static DWORD socket_is_write_protected(void)
 #if SOCKET_CP_CONNECTED
 /* Socket's Card-Present Pin: high = socket empty, low = card inserted */
 
-void socket_cp_init(void)
+static void socket_cp_init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 

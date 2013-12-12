@@ -224,10 +224,10 @@ void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 
 // this constant defines measuring info refresh rate
 // now it is 3 Hz
-#define FPS 65  // 65 = 195/3
+#define FPS 3  // 3 = 10/3
 
 //Обработчик прерываний от DMA1_Channel1 
-// will be called with 195 Hz frequence
+// will be called with  10 Hz frequence    195
 //==============================================================================
 void DMA1_Channel1_IRQHandler( void )     
 {
@@ -288,6 +288,39 @@ void TIM5_IRQHandler(void)
   disk_timerproc();
   
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
+}
+
+//
+//==============================================================================
+void EXTI4_IRQHandler( void )
+{ 
+  static int exti_state = 1; 
+  S_Sd_Param_t sd_param;  
+  portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
+    
+  if( exti_state )
+  {
+    exti_state = 0;
+    sd_param.type = SD_START;
+  }
+  else
+  {
+    exti_state = 1;
+    sd_param.type = SD_STOP;
+  }
+  
+  // sends a message to write data to sd card
+  xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
+ 
+  //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
+  //которую прервало данное прерывание, то переключаем контекст не дожидаясь окончания кванта времени 
+  if( rez_1 == pdTRUE )
+  {
+    portEND_SWITCHING_ISR( rez_1 ); 
+  }   
+
+  // Clear the EXTI line 4 pending bit 
+  EXTI_ClearITPendingBit( EXTI_Line4 );
 }
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

@@ -36,7 +36,11 @@ int main()
   SendString( "Loading...", 5, 1 );
   for( int i = 0; i < 3600000; i++ );
   
-  init_common();    
+  init_common();
+  init_exti();
+  
+  //EXTI_GenerateSWInterrupt( EXTI_Line4 ); 
+  //while( 1 );
   
   //по требованиям FreeRTOS
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
@@ -57,6 +61,49 @@ void init_common( void )
 {
   lock_send_message_to_calc_thread = 0;
   lock_send_message_to_sd_thread = 1;
+}
+
+// SyncInCh1 - PC4                      
+//===================================================================================
+void init_exti( void )
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+  EXTI_InitTypeDef EXTI_InitStructure;
+  NVIC_InitTypeDef NVIC_InitStructure;
+  
+  // Deinitializes the EXTI peripheral registers to their default reset values 
+  EXTI_DeInit();
+  
+  // Fills each GPIO_InitStructure member with its default value
+  GPIO_StructInit( &GPIO_InitStructure );
+  
+  // Fills each EXTI_InitStruct member with its reset value
+  EXTI_StructInit( &EXTI_InitStructure );
+    
+  // Enable GPIOC and AFIO clock 
+  RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE );
+  
+  // Configure PC4 as input floating 
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init( GPIOC, &GPIO_InitStructure );
+  
+  // Connect EXTI line 4 to PC4 
+  GPIO_EXTILineConfig( GPIO_PortSourceGPIOC, GPIO_PinSource4 );  
+  
+  // Configure EXTI line 4 
+  EXTI_InitStructure.EXTI_Line = EXTI_Line4;
+  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init( &EXTI_InitStructure ); 
+  
+  // Enable EXTI Interrupt
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 12;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init( &NVIC_InitStructure ); 
 }
 
 // Создаем обьекты ОС
