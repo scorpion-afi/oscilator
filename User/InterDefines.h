@@ -32,10 +32,13 @@ typedef struct
   float freq; 
 }sOscParam;
 
+typedef enum sd_type { SD_STOP = 0, SD_START, SD_WRITE } sd_type_t;
+
 //структура сообщения к потоку SD_Task
 typedef struct S_Sd_Param 
 {
+  sd_type_t type;       // operation type
   void* data;           // data to write
-  unsigned int num;     // size in bytes
+  unsigned int num;     // size in bytes !!!
   unsigned long time;   // time to write
 }S_Sd_Param_t;

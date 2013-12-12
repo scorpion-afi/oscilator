@@ -6,10 +6,10 @@
 
 DWORD get_fattime (void)
 {
- DWORD res = 0;
-/*  RTC_t rtc;
+	DWORD res = 0;
+	//RTC_t rtc;
 
-  rtc_gettime( &rtc );
+	/*rtc_gettime( &rtc );
 	
 	res =  (((DWORD)rtc.year - 1980) << 25)
 			| ((DWORD)rtc.month << 21)

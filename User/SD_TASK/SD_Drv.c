@@ -7,80 +7,91 @@
 #include "diskio.h"  // for DSTATUS
 #include "ff.h"
 
-#define FILE_NAME "0:scor.txt"
+#define FILE_NAME "0:e.txt"
 
-FATFS fs;       // main FAT_FS struct
-FIL file;       // file object
+FATFS fs;          // main FAT_FS struct
+FIL file;          // file object
+FILINFO fil_info;  // file info (for debug only)
+FRESULT res;       // (for debug only)
 
-// initialization of sd thread
-// return 0, if all is ok
-//==============================================================================
-int init_sd( void )
+//
+//================================================================================================================
+unsigned char init_sd( void )  
+{ 
+  DSTATUS card_status; 
+  
+  init_TIM5();
+  
+  card_status = disk_initialize( 0 ); 
+    
+  res = f_mount( 0, &fs );                     // выполняем связывание диска со структурой fs
+    
+  return card_status;
+}
+
+//
+//================================================================================================================
+unsigned int open_file( void )
 {
-  DSTATUS card_status = 0;
-  FRESULT res = FR_OK; 
+  DWORD size;
   
-  card_status = disk_initialize( 0 );
-  if( card_status )
-  {
-    return 1;
-  }
-   
-  res = f_mount( 0, &fs );   // mounts disk 0 with fs           
-  if( res )
-  {
-    return 2;    
-  }
-  
-  // opens/creates file with name FILE_NAME
+  // opens/creates file with name path
   // FA_OPEN_ALWAYS - Opens the file if it is existing. If not, a new file is created.
-  // FA_WRITE | FA_READ - Data can be read/written from/to the file.
-  res = f_open( &file, FILE_NAME, FA_WRITE | FA_READ | FA_OPEN_ALWAYS ); 
+  // FA_WRITE - Data can be written to the file.
+  res = f_open( &file, FILE_NAME, FA_WRITE | FA_OPEN_ALWAYS ); 
   if( res )
   {
-    return 3;    
-  } 
+    return res;    //если произошла ошибка
+  }
   
-  return 0;
+  res = f_stat( FILE_NAME, &fil_info );
+    
+  size = f_size( &file );
+  
+  // move to end of file to append data 
+  return f_lseek( &file, size );
+}
+
+unsigned int close_file( void )
+{
+  return f_close( &file );
 }
 
 // data - pointer to data to be written on sd-card
 // num - size of data in bytes !!!
 // return 0, if all is ok
 //==============================================================================
-unsigned int write( const void* data, unsigned int num )
+unsigned int write_file( const void* data, unsigned int num )
 {
   UINT len;                  // len will storage number of real written bytes
-  FRESULT res; 
 
   // writes num bytes of data to file
   res = f_write( &file, data, num, &len );
   
   if( ( res ) || ( num != len ) )  //if some error was occured
   {
-    return 1;    
+    return res;    
   } 
   
-  return f_sync( &file ); // flushes the cached information of a writing file 
+  return f_sync( &file ); // flushes the cached information of a writing file
 }
 
-
-//==============================================================================
-//==============================================================================
-//==============================================================================
-
-
-// initialize TIM5 for FAT_FS purpose
+// TIM5 -- APB1 (TIMXCLK = 72 MHz, not PCLK1 !!!)
 //==============================================================================
 void init_TIM5( void )
 {
   NVIC_InitTypeDef          NVIC_InitStructure;
   TIM_TimeBaseInitTypeDef   TIM_TimeBaseInitStruct;
-   
-  //socket_cp_init(); 
-    
+  
   // Enable TIM5 clocks
-  RCC->APB1ENR |=  0x08;
+  //RCC->APB1ENR |=  0x08;
+  RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM5, ENABLE );
+  
+  // Deinitializes the TIM5 peripheral registers to their default reset values 
+  TIM_DeInit( TIM5 );
+  
+  // Fills each TIM_TimeBaseInitStruct member with its default value
+  TIM_TimeBaseStructInit( &TIM_TimeBaseInitStruct );
   
   // necessary time delay - 10ms
   // 10 ms <-> 100 ips (interrupts per second)
@@ -93,19 +104,19 @@ void init_TIM5( void )
   TIM_TimeBaseInitStruct.TIM_Period = 720;   // прерывания 100 раз в секунду
   TIM_TimeBaseInitStruct.TIM_Prescaler = 999; // 1000 - 1
   TIM_TimeBaseInit( TIM5, &TIM_TimeBaseInitStruct );
-   
+  
+  // Enable TIM5 Update interrupt
+  TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );  
+  
+  // TIM5 enable counter
+  TIM_Cmd( TIM5, ENABLE );  
+  
   // Enable the TIM5 Interrupt
   NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;  
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 14; // 14 or 1101 1111 > configMAX_SYSCALL_INTERRUPT_PRIORITY
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 13; // 13 or 1101 1111 > configMAX_SYSCALL_INTERRUPT_PRIORITY
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init( &NVIC_InitStructure ); 
-
-  // TIM5 enable counter
-  TIM_Cmd( TIM5, ENABLE );
-  
-  // Enable TIM5 Update interrupt
-  TIM_ITConfig( TIM5, TIM_IT_Update, ENABLE );
 }
 
 // deinitialize TIM5 for FAT_FS purpose

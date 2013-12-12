@@ -10,44 +10,9 @@
 // cycle-buffer  -- 8kB
 unsigned short gl_adc_buff[ADC_NUM];
 
-// 
+// initialization of TIM3, DMA 1 Channel 1 and ADC1 for measuring 
 //==============================================================================
-void start( void )
-{
-  init();
-}
-
-// 
-//==============================================================================
-void stop( void )
-{
-  // TIM3 disable counter
-  TIM_Cmd( TIM3, DISABLE );
-  
-  // TIM3 reset
-  RCC->APB1RSTR |= 0x02;
-    
-  // disable TIM3 clocks
-  RCC->APB1ENR &= ~0x02;
-  
-  
-  // disable ADC1 
-  ADC_Cmd( ADC1, DISABLE );  
-  
-  // ADC1 reset
-  RCC->APB2RSTR |= 1 << 9;
-  
-  // disable ADC1 clocks
-  RCC->APB2ENR &= ~(1 << 9);
-  
-  
-  // disable DMA1 channel 1 
-  DMA_Cmd( DMA1_Channel1, DISABLE );
-}
-
-// initialization of TIM3 and ADC1 for measuring 
-//==============================================================================
-void init( void )
+void start_meas( void )
 {
   // takes pointer to global adc buffer
   p_beg_adc_buff = gl_adc_buff;
@@ -69,6 +34,12 @@ void init( void )
   // Enable GPIOC and ADC1 clock 
   RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_ADC1, ENABLE );
   
+  // Deinitializes the GPIOC peripheral registers to their default reset values 
+  //GPIO_DeInit( GPIOC );       DO NOT CALL THIS FUNCTION !!! (GPIOC is used by FatFS)
+  
+  // Fills each GPIO_InitStructure member with its default value
+  GPIO_StructInit( &GPIO_InitStructure );
+  
   // Configure PC.00, PC.01, PC.02 and PC.03 (ADC Channel 10, 11, 12 and 13)
   // as analog inputs 
   GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;
@@ -77,6 +48,12 @@ void init( void )
                           
   // ADC 1 init------------------------------
   
+  // Deinitializes the ADC1 peripheral registers to their default reset values
+  ADC_DeInit( ADC1 );
+  
+  // Fills each ADC_InitStructure member with its default value
+  ADC_StructInit( &ADC_InitStructure );
+      
   // ADC_Channel_10 - IoutCh1 (first in regular group)
   // ADC_Channel_11 - VoutCh1
   // ADC_Channel_12 - IoutCh2 
@@ -115,7 +92,7 @@ void init( void )
   // Enable ADC1 reset calibration register   
   ADC_ResetCalibration( ADC1 );
   // Check the end of ADC1 reset calibration register 
-  while( ADC_GetResetCalibrationStatus(ADC1) );
+  while( ADC_GetResetCalibrationStatus( ADC1 ) );
 
   // Start ADC1 calibration 
   ADC_StartCalibration( ADC1 );
@@ -127,7 +104,12 @@ void init( void )
   //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
   DMA_ClearITPendingBit( DMA1_IT_GL1 );
     
+  // Deinitializes the DMA1 Channel1 registers to their default reset values
   DMA_DeInit( DMA1_Channel1 );
+  
+  // Fills each DMA_InitStructure member with its default value
+  DMA_StructInit( &DMA_InitStructure ); 
+    
   DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;
   DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&gl_adc_buff;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
@@ -137,7 +119,7 @@ void init( void )
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
   DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+  DMA_InitStructure.DMA_Priority = DMA_Priority_Low;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
   DMA_Init( DMA1_Channel1, &DMA_InitStructure );
   
@@ -160,21 +142,56 @@ void init( void )
   // F_interrupt = PCLK1*2 / (TIM_Prescaler + 1) / TIM_Period;
 
   // Enable TIM3 clocks
-  RCC->APB1ENR |=  0x02;
+  //RCC->APB1ENR |=  0x02;
+  RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM3, ENABLE );
+  
+  // Deinitializes the TIM5 peripheral registers to their default reset values 
+  TIM_DeInit( TIM3 );
+  
+  // Fills each TIM_TimeBaseInitStruct member with its default value
+  TIM_TimeBaseStructInit( &TIM_TimeBaseInitStruct );
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;            
-  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 100 000 раз в секунду(720)
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 99; // 100 - 1
+  TIM_TimeBaseInitStruct.TIM_Period = 720-1;   // прерывания 5000 раз в секунду
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 20-1; 
   TIM_TimeBaseInit( TIM3, &TIM_TimeBaseInitStruct );
   
   //выбираем в качестве источника внешнего тригера(TRGO) update event
   TIM_SelectOutputTrigger( TIM3, TIM_TRGOSource_Update ); 
   
+  // Disable TIM3 Update interrupt
+  TIM_ITConfig( TIM3, TIM_IT_Update, DISABLE );  
+  
   // TIM3 enable counter
   TIM_Cmd( TIM3, ENABLE );
   
-  // Disable TIM3 Update interrupt
-  TIM_ITConfig( TIM3, TIM_IT_Update, DISABLE );
-  
   // after this line, TIM3-ADC1-DMA1 band will start work
+}
+
+// 
+//==============================================================================
+void stop_meas( void )
+{
+  // TIM3 disable counter
+  TIM_Cmd( TIM3, DISABLE );
+  
+  // TIM3 reset
+  RCC->APB1RSTR |= 0x02;
+    
+  // disable TIM3 clocks
+  RCC->APB1ENR &= ~0x02;
+  
+  
+  // disable ADC1 
+  ADC_Cmd( ADC1, DISABLE );  
+  
+  // ADC1 reset
+  RCC->APB2RSTR |= 1 << 9;
+  
+  // disable ADC1 clocks
+  RCC->APB2ENR &= ~(1 << 9);
+  
+  
+  // disable DMA1 channel 1 
+  DMA_Cmd( DMA1_Channel1, DISABLE );
 }

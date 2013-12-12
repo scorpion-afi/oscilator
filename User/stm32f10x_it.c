@@ -24,7 +24,7 @@
 #include "stm32f10x_it.h"
 
 #include "InterDefines.h"   // определение sOscParam and S_Sd_Param_t
-#include "CommonDefines.h"  // for using FreeRTOS functions and types
+#include "CommonDefines.h"  // for using FreeRTOS functions,types and common (global) variables (flags)
 
 // for use pointer p_beg_adc_buff
 #include "Meas_Drv.h" 
@@ -224,7 +224,7 @@ void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 
 // this constant defines measuring info refresh rate
 // now it is 3 Hz
-#define FPS 65  // 195/3
+#define FPS 65  // 65 = 195/3
 
 //Обработчик прерываний от DMA1_Channel1 
 // will be called with 195 Hz frequence
@@ -237,11 +237,11 @@ void DMA1_Channel1_IRQHandler( void )
   portBASE_TYPE rez = pdFALSE;  // обязятельно !!!
   portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
   
-  //sd_param.num = ADC_NUM_DIV_2 * 2;           //  2 - sizeof( unsigned short )
-  sd_param.num = ADC_NUM;                       //  ADC_NUM_DIV_2 * 2 == ADC_NUM 
-  sd_param.time = 0x1109;    
+  sd_param.type = SD_WRITE;
+  sd_param.num = ADC_NUM;   // size in bytes !!!
+  sd_param.time = 0x1109;   // any, while   
    
-  if( DMA1->ISR &  0x04 )    //( 1 << 2 )
+  if( DMA1->ISR & 0x04 )    //( 1 << 2 )
   {
     sd_param.data = (void*)(p_beg_adc_buff);
   }
@@ -250,7 +250,7 @@ void DMA1_Channel1_IRQHandler( void )
     sd_param.data = (void*)(p_beg_adc_buff + ADC_NUM_DIV_2); 
   }
   
-  // message to Calc Task will be sent twice for seconds
+  // message to Calc Task will be sent three times per seconds
   if( ( ++counter > FPS ) && ( lock_send_message_to_calc_thread  == 0 ) )
   {       
     // sends a message to display results of measuring
@@ -258,16 +258,20 @@ void DMA1_Channel1_IRQHandler( void )
     counter = 0;
   }
   
-  // sends a message to write data to sd card
-  xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
-   
-  //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
-  //которую прервало данное прерывание, то переключаем контекст не дожидаясь окончания кванта времени 
-  if( rez_1 == pdTRUE )
+  // message to SD thread, to write on sd card, will be send only when allowed
+  if( !lock_send_message_to_sd_thread )
   {
-    portEND_SWITCHING_ISR( rez_1 ); 
-  }   
- 
+    // sends a message to write data to sd card
+    xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
+   
+    //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
+    //которую прервало данное прерывание, то переключаем контекст не дожидаясь окончания кванта времени 
+    if( rez_1 == pdTRUE )
+    {
+      portEND_SWITCHING_ISR( rez_1 ); 
+    }   
+  }
+  
   //сбрасываем флаг прерывания global interrupt 1 канала DMA 1
   DMA1->IFCR |= 1; //DMA1_IT_GL1;
 }

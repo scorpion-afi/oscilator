@@ -36,8 +36,10 @@ int main()
   SendString( "Loading...", 5, 1 );
   for( int i = 0; i < 3600000; i++ );
   
+  lock_send_message_to_sd_thread = 1;
+  
   //по требованиям FreeRTOS
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+  NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
   //создание задач, очередей и других обьектов ОС
   if( Create_OS_Objects() != 0 )
@@ -53,23 +55,23 @@ int main()
 //возвращяемый результат: 1 - все обекты создать удалось
 //                        0 - не удалось
 //===================================================================================
-int Create_OS_Objects(void)
+int Create_OS_Objects( void )
 { 
   portBASE_TYPE rez;
  
   // queues creation
   
   //создаем очередь для взаимодействия между PBTask и MTask
-  qPB_to_M = xQueueCreate(5, sizeof(char));
-  if(qPB_to_M == NULL) return 0;
+  qPB_to_M = xQueueCreate( 5, sizeof( char ) );
+  if( qPB_to_M == NULL ) return 0;
   
   //создаем очередь для взаимодействия между MTask и LCDTask
-  qM_to_LCD = xQueueCreate(5, sizeof(sLCDParam));
-  if(qM_to_LCD == NULL) return 0;
+  qM_to_LCD = xQueueCreate( 5, sizeof( sLCDParam ) );
+  if( qM_to_LCD == NULL ) return 0;
   
   //создаем очередь для взаимодействия с OscTask
-  qTo_Osc = xQueueCreate(5, sizeof(sOscParam));
-  if(qTo_Osc == NULL) return 0;  
+  qTo_Osc = xQueueCreate(5 , sizeof( sOscParam ) );
+  if( qTo_Osc == NULL ) return 0;  
   
   // creating queue for Meas_Task
   queu_to_meas = xQueueCreate( 5, sizeof( char ) );
@@ -97,19 +99,19 @@ int Create_OS_Objects(void)
   //  Idle Task - priority 0
   
   //создаем задачу(поток) PBTask с приоритетом, равным 2
-  rez = xTaskCreate(vPBTask, "PBTask", 256, NULL, 1, NULL);
-  if(rez != pdPASS) return 0;
+  rez = xTaskCreate( vPBTask, "PBTask", 256, NULL, 1, NULL );
+  if( rez != pdPASS ) return 0;
   
   //создаем задачу(поток) MTask с приоритетом, равным 3
-  rez = xTaskCreate(vMTask, "MTask", 800, NULL, 2, NULL);
-  if(rez != pdPASS) return 0;
+  rez = xTaskCreate( vMTask, "MTask", 800, NULL, 2, NULL );
+  if( rez != pdPASS ) return 0;
    
   //создаем задачу(поток) LCDTask с приоритетом, равным 4
-  rez = xTaskCreate(vLCDTask, "LCDTask", 256, NULL, 4, NULL);
-  if(rez != pdPASS) return 0;
+  rez = xTaskCreate( vLCDTask, "LCDTask", 256, NULL, 4, NULL );
+  if( rez != pdPASS ) return 0;
   
   //создаем задачу(поток) OscTask с приоритетом, равным 5
-  rez = xTaskCreate(vOscTask, "OscTask", 512, NULL, 5, NULL);
+  rez = xTaskCreate( vOscTask, "OscTask", 512, NULL, 5, NULL );
   if( rez != pdPASS ) return 0;
   
   //создаем задачу (поток) CalcTask с приоритетом, равным 4

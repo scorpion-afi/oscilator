@@ -16,3 +16,6 @@
 
   // for lock sending message from DMA1 Channel 1 ISR to Calc thread
   GLB_Com int lock_send_message_to_calc_thread;
+  
+  // for lock sending message from DMA1 Channel 1 ISR to SD thread
+  GLB_Com int lock_send_message_to_sd_thread;
