@@ -172,7 +172,7 @@ void Off_DAC_Channel(char ChNum)
 
 // controls measuing hardware
 // if is_on == 1, then  on
-// else -                off
+// else -               off
 //==============================================================================
 void meas_control( char is_on )
 {
@@ -180,6 +180,21 @@ void meas_control( char is_on )
   {
     xQueueSend( queu_to_meas, ( void * )&is_on, portMAX_DELAY );   
   }  
+}
+
+// control sd operations
+// if is_on == 1, then  on
+// else -               off
+//==============================================================================
+void sd_control( unsigned char is_on )
+{
+  S_Sd_Param_t sd_param;
+  
+  if( ( is_on != 0 ) && ( is_on != 1 ) ) return;
+  
+  sd_param.type = is_on;  // SD_STOP = 0, SD_START = 1
+  
+  xQueueSend( queu_to_sd, (void *)&sd_param, portMAX_DELAY );
 }
 
 //

@@ -73,6 +73,11 @@
     // 0 - gen_mode
     // 1 - meas_mode
     char is_meas_mode; //bool
+     
+    // controls sd operations
+    // 0 - stop
+    // 1 - start  
+    unsigned char is_sd_write_mode; // bool
 
 //-------------------------------------------------------------------------------------------------------------
     //имееют значение только в режиме редактирования(EditMode = 1)

@@ -37,6 +37,7 @@
   extern void preInitDAC(const sChannel *ptr, char curCh);
   extern void Off_DAC_Channel(char ChNum);
   extern void meas_control( char is_on );
+  extern void sd_control( unsigned char is_on );
   
   // from "CommonDefines.h"
   extern int lock_send_message_to_calc_thread;
@@ -49,7 +50,9 @@ void InitView(void)
   // 0 - A(D), 1 - O(M), 2 - F, 3 - D  
   CurChannel = 0;
   EditMode = 0;
-  is_meas_mode = 1;
+  
+  is_meas_mode = 1;       // measurement mode
+  is_sd_write_mode = 0;   // write to sd is disallowed
 
 //Channel 1 
   Channel[0].pos_x = 0;
@@ -763,8 +766,8 @@ void InitView(void)
 //==============================================================================
 void MenuStateMach(char ButNum, char EventType, char isKeyPad)
 {
-  // blocking buttons, except '+', in measuring mode
-  if ( ( is_meas_mode ) && ( ButNum != 6 ) )
+  // blocking buttons, except '+' ans '-', in measuring mode
+  if( ( is_meas_mode ) && ( ButNum != 6 ) && ( ButNum != 7 ) )
   {
     return;
   }
@@ -919,6 +922,25 @@ void MenuStateMach(char ButNum, char EventType, char isKeyPad)
       if( EditMode == 1 )
       {
         EditParam( 13 );
+      }
+      else
+      {               
+        if( is_sd_write_mode == 0 )
+        {        
+          // switch on sd write mode
+          is_sd_write_mode = 1;
+          
+          // sends a message to START write data to sd card
+          sd_control( 1 );
+        }
+        else
+        {
+          // switch off sd write mode
+          is_sd_write_mode = 0;
+                     
+          // sends a message to STOP write data to sd card
+          sd_control( 0 );                
+        }
       }
     }   
     break;

@@ -719,7 +719,7 @@
       <inputs>
         <tool>
           <name>ICCARM</name>
-          <file> 140 151 152 15 98 100 41 88 46 85 124 79 83 50 164 87 65 141 94 47 72 9 156 73 40 132</file>
+          <file> 140 9 100 41 88 46 85 124 79 83 156 73 40 132</file>
         </tool>
         <tool>
           <name>BICOMP</name>
