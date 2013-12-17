@@ -17,7 +17,7 @@
   void blink_control(int isOn);
   void Off_DAC_Channel(char ChNum);
   void meas_control( char is_on );
-  void sd_control( unsigned char is_on );
+  void sd_control( void );
   
   void ChangeChar(char *pStr);
   

@@ -37,7 +37,7 @@
   extern void preInitDAC(const sChannel *ptr, char curCh);
   extern void Off_DAC_Channel(char ChNum);
   extern void meas_control( char is_on );
-  extern void sd_control( unsigned char is_on );
+  extern void sd_control( void );
   
   // from "CommonDefines.h"
   extern int lock_send_message_to_calc_thread;
@@ -924,25 +924,9 @@ void MenuStateMach(char ButNum, char EventType, char isKeyPad)
         EditParam( 13 );
       }
       else
-      {               
-        if( is_sd_write_mode == 0 )
-        {        
-          // switch on sd write mode
-          
-          // setting is_sd_write_mode is occured in sd_thread
-          
-          // sends a message START to sd_thread
-          sd_control( 1 );
-        }
-        else
-        {
-          // switch off sd write mode
-          
-          // clearing is_sd_write_mode is occured in sd_thread
-                  
-          // sends a message STOP to sd_thread
-          sd_control( 0 );                
-        }
+      {                        
+        // sends a message SD_EVENT to sd_thread
+        sd_control();
       }
     }   
     break;

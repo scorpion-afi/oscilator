@@ -56,8 +56,8 @@ void start_meas( void )
       
   // ADC_Channel_10 - IoutCh1 (first in regular group)
   // ADC_Channel_11 - VoutCh1
-  // ADC_Channel_12 - IoutCh2 
-  // ADC_Channel_13 - VoutCh2
+  // ADC_Channel_12 - VoutCh2 
+  // ADC_Channel_13 - IoutCh2
   
   // ADCCLK = 12MHz
   // amount of convertion cycles

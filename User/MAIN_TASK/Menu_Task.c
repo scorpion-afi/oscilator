@@ -182,17 +182,13 @@ void meas_control( char is_on )
   }  
 }
 
-// control sd operations
-// if is_on == 1, then  on
-// else -               off
+// send SD_EVENT message to sd_thread
 //==============================================================================
-void sd_control( unsigned char is_on )
+void sd_control( void )
 {
   S_Sd_Param_t sd_param;
   
-  if( ( is_on != 0 ) && ( is_on != 1 ) ) return;
-  
-  sd_param.type = (sd_type_t)is_on;  // SD_STOP = 0, SD_START = 1
+  sd_param.type = SD_EVENT;
   
   xQueueSend( queu_to_sd, (void *)&sd_param, portMAX_DELAY );
 }

@@ -294,20 +294,10 @@ void TIM5_IRQHandler(void)
 //==============================================================================
 void EXTI4_IRQHandler( void )
 { 
-  static int exti_state = 1; 
   S_Sd_Param_t sd_param;  
   portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
     
-  if( exti_state )
-  {
-    exti_state = 0;
-    sd_param.type = SD_START;
-  }
-  else
-  {
-    exti_state = 1;
-    sd_param.type = SD_STOP;
-  }
+  sd_param.type = SD_EVENT;
   
   // sends a message to write data to sd card
   xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );

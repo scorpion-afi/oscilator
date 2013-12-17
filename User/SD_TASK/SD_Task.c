@@ -9,15 +9,12 @@
 #include "InterDefines.h"    // for S_Sd_Param_t
 #include "CommonDefines.h"    //for interaction with FreeRTOS
 
-// to synchronize acces to sd_thread from synchronous user_button action and 
-// asynchronous extern signal
-extern unsigned char is_sd_write_mode; 
-
 // function-thread (task), that serves requests from DMA1 iterrupt
 //==============================================================================
 void vSDTask( void* pvParameters )
 { 
   S_Sd_Param_t message;
+  int state = 0; // sd card is off
    
   while( 1 )
   {
@@ -26,34 +23,35 @@ void vSDTask( void* pvParameters )
     
     switch( message.type ) 
     {
-      case SD_STOP:
+      case SD_EVENT:
       {
-        close_file();
-        
-        de_init_TIM5();
-        
-        //write_file();  //write close time
-        
-        lock_send_message_to_sd_thread = 1; // disallow to send message from DMA 1 ch1 ISR to sd_thread
-        is_sd_write_mode = 0;
-      }
-      break;
-      
-      case SD_START:
-      {
-        if( init_sd() ) // if init of sd card is failed
+        if( state )  // if sd card is on
         {
-          de_init_TIM5();
-          break;
+          state = 0;
+          
+          close_file();     
+          de_init_TIM5();    
+          //write_file();  //write close time
+        
+          lock_send_message_to_sd_thread = 1; // disallow to send message from DMA 1 ch1 ISR to sd_thread         
         }
-        
-        open_file();
-        //write_file();  //write open time
-        
-        lock_send_message_to_sd_thread = 0; // allow to send message from DMA 1 ch1 ISR to sd_thread 
-        is_sd_write_mode = 1;
+        else         // if sd card is off
+        {                
+          if( init_sd() ) // if init of sd card is failed
+          {
+            de_init_TIM5();
+            break;
+          }
+          
+          state = 1;
+          
+          open_file();
+          //write_file();  //write open time
+          
+          lock_send_message_to_sd_thread = 0; // allow to send message from DMA 1 ch1 ISR to sd_thread 
+        }
       }
-      break;
+      break;      
       
       case SD_WRITE:
       {
