@@ -12,14 +12,14 @@
 #ifdef MTask
 
   //аппаратно зависимые функции, будут обьявлены как extern в драйвере меню 
-  void lcd_write(char *pStr, char x, char y);
-  void shift_blink(char x, char y);
-  void blink_control(int isOn);
-  void Off_DAC_Channel(char ChNum);
+  void lcd_write( char *pStr, char x, char y );
+  void shift_blink( char x, char y );
+  void blink_control( int isOn );
+  void Off_DAC_Channel( char ChNum );
   void meas_control( char is_on );
   void sd_control( void );
   
-  void ChangeChar(char *pStr);
+  void ChangeChar( char *pStr );
   
   //извлечение информации из Mesg в ButNum, EventType и return
   // подстройка под menu state machine

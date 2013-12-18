@@ -10,9 +10,9 @@
 #include "Menu_Task.h"      //определение функции-потока MTask
 #include "LCD_Task.h"       //определение функции-потока LCDTask
 #include "Osc_Task.h"       //определение функции-потока BeepTask
-#include "Meas_Task.h"
-#include "Calc_Task.h"
-#include "SD_Task.h"
+#include "Meas_Task.h"      // vMeasTask function declaration
+#include "Calc_Task.h"      // vCalcTask function declaration
+#include "SD_Task.h"        // vSDTask function declaration
 
 #include "InterDefines.h"   //определение sLCDParam и sOscParam
 
@@ -23,6 +23,7 @@
 #include "LCD_Drv.h"
 
 /*
+// for checking frequencies set
 #include "stm32f10x_rcc.h"  
 RCC_ClocksTypeDef kyky;
 RCC_GetClocksFreq( &kyky );
@@ -30,13 +31,16 @@ RCC_GetClocksFreq( &kyky );
 
 //точка входа
 //=======================================================================================
-int main()
+int main( void )
 {  
   InitLCD();
   SendString( "Loading...", 5, 1 );
   for( int i = 0; i < 3600000; i++ );
   
+  // some initialization, which must be applied before FreeRTOS will be started
   init_common();
+  
+  // initialization of external interrupt lines
   init_exti();
   
   //EXTI_GenerateSWInterrupt( EXTI_Line4 ); 
@@ -55,7 +59,7 @@ int main()
   return 0;
 }
 
-//                       
+// some initialization, which must be applied before FreeRTOS will be started                      
 //===================================================================================
 void init_common( void )
 {
@@ -63,7 +67,9 @@ void init_common( void )
   lock_send_message_to_sd_thread = 1;
 }
 
-// SyncInCh1 - PC4                      
+// initialization of external interrupt lines
+// SyncInCh1 - PC4 
+// SyncInCh2 - PC5 
 //===================================================================================
 void init_exti( void )
 {
@@ -83,8 +89,8 @@ void init_exti( void )
   // Enable GPIOC and AFIO clock 
   RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE );
   
-  // Configure PC4 as input floating 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+  // Configure PC4 and PC5 as input floating 
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
   GPIO_Init( GPIOC, &GPIO_InitStructure );
   
@@ -98,11 +104,22 @@ void init_exti( void )
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init( &EXTI_InitStructure ); 
   
-  // Enable EXTI Interrupt
+  // Connect EXTI line 5 to PC5 
+  GPIO_EXTILineConfig( GPIO_PortSourceGPIOC, GPIO_PinSource5 );  
+  
+  // Configure EXTI line 5 
+  EXTI_InitStructure.EXTI_Line = EXTI_Line5;
+  EXTI_Init( &EXTI_InitStructure ); 
+  
+  // Enable EXTI line 4 Interrupt
   NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 12;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init( &NVIC_InitStructure ); 
+  
+  // Enable EXTI line 5 Interrupt
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
   NVIC_Init( &NVIC_InitStructure ); 
 }
 

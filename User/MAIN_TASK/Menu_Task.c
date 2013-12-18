@@ -9,8 +9,8 @@
 #include "InterDefines.h"   //определение sBeepParam, sLCDParam
 
 #include "CommonDefines.h"  //дл€ взаимодействи€ с FreeRTOS
-
-void preInitDAC(const sChannel *ptr, char curCh);
+ 
+void preInitDAC( const sChannel *ptr, char curCh );
 
 // функци€, релизующ€€ поток MTask
 //==============================================================================

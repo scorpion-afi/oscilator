@@ -176,21 +176,24 @@ void stop_meas( void )
   TIM_Cmd( TIM3, DISABLE );
   
   // TIM3 reset
-  RCC->APB1RSTR |= 0x02;
+  //RCC->APB1RSTR |= 0x02;
+  RCC_APB1PeriphResetCmd( RCC_APB1Periph_TIM3, ENABLE );
     
   // disable TIM3 clocks
-  RCC->APB1ENR &= ~0x02;
+  //RCC->APB1ENR &= ~0x02;
+  RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM3, DISABLE );
   
   
   // disable ADC1 
   ADC_Cmd( ADC1, DISABLE );  
   
   // ADC1 reset
-  RCC->APB2RSTR |= 1 << 9;
-  
+  //RCC->APB2RSTR |= 1 << 9;
+  RCC_APB2PeriphResetCmd( RCC_APB2Periph_ADC1, ENABLE );
+ 
   // disable ADC1 clocks
-  RCC->APB2ENR &= ~(1 << 9);
-  
+  //RCC->APB2ENR &= ~(1 << 9);
+  RCC_APB2PeriphClockCmd( RCC_APB2Periph_ADC1, DISABLE );
   
   // disable DMA1 channel 1 
   DMA_Cmd( DMA1_Channel1, DISABLE );

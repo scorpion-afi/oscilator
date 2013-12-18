@@ -290,7 +290,7 @@ void TIM5_IRQHandler(void)
   TIM_ClearITPendingBit(TIM5, TIM_IT_Update);	//__Clear TIM5 update interrupt__
 }
 
-//
+// extil line 4 isr (PC4)
 //==============================================================================
 void EXTI4_IRQHandler( void )
 { 
@@ -299,7 +299,7 @@ void EXTI4_IRQHandler( void )
     
   sd_param.type = SD_EVENT;
   
-  // sends a message to write data to sd card
+  // sends a message SD_EVENT to write data to sd card
   xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
  
   //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
@@ -311,6 +311,32 @@ void EXTI4_IRQHandler( void )
 
   // Clear the EXTI line 4 pending bit 
   EXTI_ClearITPendingBit( EXTI_Line4 );
+}
+
+// extil line 5 isr (PC5)
+// are some questions !!!
+//==============================================================================
+void EXTI9_5_IRQHandler( void )
+{ 
+  /*
+  S_Sd_Param_t sd_param;  
+  portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
+    
+  sd_param.type = SD_EVENT;
+  
+  // sends a message SD_EVENT to write data to sd card
+  xQueueSendFromISR( queu_to_sd, (void *)&sd_param, &rez_1 );
+ 
+  //если в результате посылки сообщения была разблокирована задача, более приоритетная, чем та,
+  //которую прервало данное прерывание, то переключаем контекст не дожидаясь окончания кванта времени 
+  if( rez_1 == pdTRUE )
+  {
+    portEND_SWITCHING_ISR( rez_1 ); 
+  }   
+  */
+  
+  // Clear the EXTI line 5 pending bit 
+  EXTI_ClearITPendingBit( EXTI_Line5 );
 }
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

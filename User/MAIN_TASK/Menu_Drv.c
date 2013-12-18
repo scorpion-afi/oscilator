@@ -52,7 +52,6 @@ void InitView(void)
   EditMode = 0;
   
   is_meas_mode = 1;       // measurement mode
-  is_sd_write_mode = 0;   // write to sd is disallowed
 
 //Channel 1 
   Channel[0].pos_x = 0;

@@ -14,8 +14,9 @@ FIL file;          // file object
 FILINFO fil_info;  // file info (for debug only)
 FRESULT res;       // (for debug only)
 
-//
-//================================================================================================================
+// inits tim5 and hardwares linked with sd card
+// return 0, if initilization has been finished successfully
+//==============================================================================
 unsigned char init_sd( void )  
 { 
   DSTATUS card_status; 
@@ -24,13 +25,14 @@ unsigned char init_sd( void )
   
   card_status = disk_initialize( 0 ); 
     
-  res = f_mount( 0, &fs );                     // выполняем связывание диска со структурой fs
+  res = f_mount( 0, &fs );       // выполняем связывание диска со структурой fs
     
   return card_status;
 }
 
-//
-//================================================================================================================
+// opens file FILE_NAME for appending (file pointer will be shifted to end of file)
+// return 0, if initilization has been finished successfully
+//==============================================================================
 unsigned int open_file( void )
 {
   DWORD size;
@@ -52,6 +54,9 @@ unsigned int open_file( void )
   return f_lseek( &file, size );
 }
 
+// closes file FILE_NAME
+// return 0, if initilization has been finished successfully
+//==============================================================================
 unsigned int close_file( void )
 {
   return f_close( &file );
@@ -77,6 +82,7 @@ unsigned int write_file( const void* data, unsigned int num )
 }
 
 // TIM5 -- APB1 (TIMXCLK = 72 MHz, not PCLK1 !!!)
+// initialization of tim 5 to generate interrupts (10 ms)
 //==============================================================================
 void init_TIM5( void )
 {
@@ -130,5 +136,6 @@ void de_init_TIM5( void )
   TIM_Cmd( TIM5, DISABLE );
   
   // Disable TIM5 clocks
-  RCC->APB1ENR &= ~0x08;
+  //RCC->APB1ENR &= ~0x08;
+  RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM5, DISABLE );
 }
