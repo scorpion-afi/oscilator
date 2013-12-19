@@ -296,6 +296,11 @@ void EXTI4_IRQHandler( void )
 { 
   S_Sd_Param_t sd_param;  
   portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
+  
+  // locks writting to sd card, file is still open
+  // we can simply drop out last 4 kB from file, to have correct measured data
+  //if( !lock_send_message_to_sd_thread ) lock_send_message_to_sd_thread = 1;
+  lock_send_message_to_sd_thread = 1;
     
   sd_param.type = SD_EVENT;
   
