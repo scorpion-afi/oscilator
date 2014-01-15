@@ -599,25 +599,84 @@ void CalcSawtooth(void)
   }//вычисление отсчетов triangl (будут положены в DAC_Buff)    
 }
 
+// 16 * 4095 < 2 ^ 16
+#define UNIFORM_SET 16  // do not increase this value
+
 // вычисление отсчетов шума с нормальным законом распределения
 //==============================================================================
 void CalcGaus(void)
-{  
+{
   uint32_t *ptemp, temp;
-  static uint16_t /*Ampl[2],*/ Offset[2];
+  static uint16_t Offset[2];
+  
+  // R[] - stores value of LSFR for two channel
+  static uint16_t R[2];
+    
+  ptemp = pDAC_Buff;
+  
+  // Вычисляем добавки за счет амплитуды и смещения ("создаем модельку Gaus signal")
+  if(!first_entry[CurDAC_Ch])
+  {  
+    first_entry[CurDAC_Ch] = 1;
+       
+    Offset[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
+    
+    R[CurDAC_Ch] = 1;   //anti-lock mechanism  
+  }
+  
+  //вычисление отсчетов шума(будут положены в DAC_Buff)
+  for(int i = 0; i < size_of_DAC_Buff/2; i++)
+  {   
+    temp = 0;
+      
+    // temp can not be greater then 2 ^ 16
+    for( int i = 0; i < UNIFORM_SET; i++ )
+    {
+      // random number in range: 0 - 4095 (uniform distribution)
+      R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6) ^ (R[CurDAC_Ch]>>4) ^ (R[CurDAC_Ch]>>1) ^ R[CurDAC_Ch] ) & 1 ) << 11 ) | (R[CurDAC_Ch] >> 1);
+           
+      temp += R[CurDAC_Ch]; 
+      
+      if( R[CurDAC_Ch] == 0 ) R[CurDAC_Ch] = 1; //anti-lock mechanism     
+    }
+    
+    // take 12 most significant bits
+    temp = ( temp >> 4 ) & 0xFFF;
+    
+    temp += Offset[CurDAC_Ch];
+    
+    if(temp > 4095) temp = 4095;
+    
+    if(CurDAC_Ch == 0)
+    {
+      *ptemp &= 0xFFFF0000;                  
+      *ptemp++ |= (uint32_t)(temp);
+    }
+    else
+    {
+      *ptemp &= 0x0000FFFF;                               
+      *ptemp++ |= (uint32_t)(temp << 16);     
+    }     
+  }      
+}
+
+// вычисление отсчетов шума с равномерным законом распределения
+//==============================================================================
+void CalcUniform(void)
+{
+  uint32_t *ptemp, temp;
+  static uint16_t Offset[2];
   
   //R[] - хранит сдержимое регистров сдвига(LSFR) для двух каналов
   static uint16_t R[2];
     
   ptemp = pDAC_Buff;
   
-   // Вычисляем добавки за счет амплитуды и смещения ("создаем модельку Gaus signal")
+  // Вычисляем добавки за счет амплитуды и смещения ("создаем модельку Gaus signal")
   if(!first_entry[CurDAC_Ch])
   {  
     first_entry[CurDAC_Ch] = 1;
-       
-    //Ampl[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].amp*Lev_per_Volt + 0.5);
-    //Offset[CurDAC_Ch] = (uint16_t)( (CurOscParam[CurDAC_Ch].offset + 5.0)*Lev_per_Volt + 0.5);
+   
     Offset[CurDAC_Ch] = (uint16_t)(CurOscParam[CurDAC_Ch].offset*Lev_per_Volt + 0.5);
                   
     R[CurDAC_Ch] = 1;   //anti-lock mechanism
@@ -626,7 +685,8 @@ void CalcGaus(void)
   //вычисление отсчетов шума(будут положены в DAC_Buff)
   for(int i = 0; i < size_of_DAC_Buff/2; i++)
   {
-    R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6)^(R[CurDAC_Ch]>>4)^(R[CurDAC_Ch]>>1)^R[CurDAC_Ch] ) & 1 ) << 11 ) || (R[CurDAC_Ch] >> 1);
+    // random number in range: 0 - 4095  (uniform distribution)
+    R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6) ^ (R[CurDAC_Ch]>>4) ^ (R[CurDAC_Ch]>>1) ^ R[CurDAC_Ch] ) & 1 ) << 11 ) | (R[CurDAC_Ch] >> 1);
     
     temp = R[CurDAC_Ch] + Offset[CurDAC_Ch];
     if(temp > 4095) temp = 4095;
@@ -643,14 +703,7 @@ void CalcGaus(void)
     }
     
     if(R[CurDAC_Ch] == 0) R[CurDAC_Ch] = 1; //anti-lock mechanism    
-  }  
-}
-
-// вычисление отсчетов шума с равномерным законом распределения
-//==============================================================================
-void CalcUniform(void)
-{
-  
+  }    
 }
 
 // вычисление отсчетов сигнала zero 
