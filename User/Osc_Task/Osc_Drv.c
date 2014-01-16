@@ -641,7 +641,9 @@ void CalcGaus(void)
     }
     
     // take 12 most significant bits
-    temp = ( temp >> 4 ) & 0xFFF;
+    // temp can not be greater then 4095
+    //temp = ( temp >> 4 ) & 0xFFF;
+    temp >>= 4;
     
     temp += Offset[CurDAC_Ch];
     
