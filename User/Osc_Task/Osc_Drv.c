@@ -177,6 +177,42 @@ void ReCalc(const sOscParam *pOscParam)
   pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type]();    
 }
 
+// 400 000 byte per second / 2048 byte = 195.3125
+// it is DMA2_Channel3_IRQHandler() frequency calling, and we can say,
+// that and CalcSin() function too
+#define DDS_IRQ_FREQ 195.3125f
+
+// temporary
+#define MAX_FREQ 10000.0f
+#define MIN_FREQ 0.0f
+
+float sweep_rate =  11.0f; 	// 11 Hz per second
+char sweep_direction = 0;   // 0 - up, 1 - down
+
+// this function must be called with DDS_IRQ_FREQ frequency to correct work flow
+// this function controls sweeping of frequency for current signal on current channel
+void sweep_control( void )
+{
+	// increase/decrease frequency
+	if( sweep_direction )
+	  CurOscParam[CurDAC_Ch].freq -= sweep_rate / DDS_IRQ_FREQ;
+	else
+	  CurOscParam[CurDAC_Ch].freq += sweep_rate / DDS_IRQ_FREQ;
+
+	if( CurOscParam[CurDAC_Ch].freq > MAX_FREQ )
+	{
+	  sweep_direction = 1; // sweep frequency down
+	  CurOscParam[CurDAC_Ch].freq -= sweep_rate / DDS_IRQ_FREQ;
+	}
+	else if( CurOscParam[CurDAC_Ch].freq < MIN_FREQ )
+	{
+	  sweep_direction = 0; // sweep frequency up
+	  CurOscParam[CurDAC_Ch].freq += sweep_rate / DDS_IRQ_FREQ;
+	}
+
+    FREQ_REG[CurDAC_Ch] = (uint32_t)( CurOscParam[CurDAC_Ch].freq*Freq_koef + 0.5 );
+}
+
 
 //=================================================================================
 //=================================================================================
@@ -224,16 +260,8 @@ void CalcSin(void)
    
     FREQ_REG[CurDAC_Ch] = (uint32_t)( CurOscParam[CurDAC_Ch].freq*Freq_koef + 0.5 );
   }
-  
-  // if we are entered in if condition, this mean 1 second has been passed
-  // 400 000 byte per second / 2048 byte ~ 195 Hz
-  if( ++call_cnt > 195 )
-  {
-    call_cnt = 0;
-
-    // now it is testing, and we simply increase frequency with 11Hz per second rate
-    FREQ_REG[CurDAC_Ch] += (uint32_t)( 11*Freq_koef + 0.5 );
-  }
+  else
+    sweep_control();
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
