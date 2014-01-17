@@ -17,6 +17,24 @@
 #define Freq_koef  Nph_reg/Fsamples
 #define Phase_koef Nph_reg/(2*pi)
 
+#define FREQ_SWEEP
+
+#ifdef FREQ_SWEEP
+
+// 400 000 byte per second / 2048 byte = 195.3125
+// it is DMA2_Channel3_IRQHandler() frequency calling, and we can say,
+// that and CalcSin() function too
+#define DDS_IRQ_FREQ 195.3125f
+
+// temporary
+#define MAX_FREQ 10000.0f
+#define MIN_FREQ 0.0f
+
+float sweep_rate =  11.0f; 	// 11 Hz per second
+char sweep_direction = 0;   // 0 - up, 1 - down
+
+#endif
+
 //extern void sound(int T, int num);
 
 // ��������� ��������� ���������� � ���������� ������������� �� ��������� 
@@ -143,12 +161,20 @@ void ReFill(void)
   
   CurDAC_Ch = 0;
   
+#ifdef FREQ_SWEEP
+  sweep_control();
+#endif
+
   //���� ����� �������������
   if(CurOscParam[CurDAC_Ch].Sig_Type != 6)  
     pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type](); //����� �������, ������������� �� ���������� �������� �������� ������� �������� ������
 
   CurDAC_Ch = 1;
   
+#ifdef FREQ_SWEEP
+  sweep_control();
+#endif
+
   //���� ����� �������������
   if(CurOscParam[CurDAC_Ch].Sig_Type != 6)  
     pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type](); //����� �������, ������������� �� ���������� �������� �������� ������� �������� ������
@@ -177,20 +203,10 @@ void ReCalc(const sOscParam *pOscParam)
   pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type]();    
 }
 
-// 400 000 byte per second / 2048 byte = 195.3125
-// it is DMA2_Channel3_IRQHandler() frequency calling, and we can say,
-// that and CalcSin() function too
-#define DDS_IRQ_FREQ 195.3125f
-
-// temporary
-#define MAX_FREQ 10000.0f
-#define MIN_FREQ 0.0f
-
-float sweep_rate =  11.0f; 	// 11 Hz per second
-char sweep_direction = 0;   // 0 - up, 1 - down
-
+#ifdef FREQ_SWEEP
 // this function must be called with DDS_IRQ_FREQ frequency to correct work flow
 // this function controls sweeping of frequency for current signal on current channel
+//==============================================================================
 void sweep_control( void )
 {
 	// increase/decrease frequency
@@ -212,7 +228,7 @@ void sweep_control( void )
 
     FREQ_REG[CurDAC_Ch] = (uint32_t)( CurOscParam[CurDAC_Ch].freq*Freq_koef + 0.5 );
 }
-
+#endif
 
 //=================================================================================
 //=================================================================================
@@ -260,8 +276,6 @@ void CalcSin(void)
    
     FREQ_REG[CurDAC_Ch] = (uint32_t)( CurOscParam[CurDAC_Ch].freq*Freq_koef + 0.5 );
   }
-  else
-    sweep_control();
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
