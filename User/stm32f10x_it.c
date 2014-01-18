@@ -175,13 +175,14 @@ void SysTick_Handler(void)
   * @}
   */
 
-
+/*
 //Обработчик прерываний от таймера TIM2. 
 //==============================================================================
 void TIM2_IRQHandler(void)
 { 
   TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	//__Clear TIM2 update interrupt__
 }
+*/
 
 //Генерация сигналов (Osc_xxx.c)
 
@@ -298,7 +299,7 @@ void EXTI4_IRQHandler( void )
   portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
   
   // locks writting to sd card, file is still open
-  // we can simply drop out last 4 kB from file, to have correct measured data
+  // we can simply drop out last 8 kB from file, to have correct measured data
   //if( !lock_send_message_to_sd_thread ) lock_send_message_to_sd_thread = 1;
   lock_send_message_to_sd_thread = 1;
     
@@ -327,6 +328,11 @@ void EXTI9_5_IRQHandler( void )
   S_Sd_Param_t sd_param;  
   portBASE_TYPE rez_1 = pdFALSE;  // обязятельно !!!
     
+  // locks writting to sd card, file is still open
+  // we can simply drop out last 8 kB from file, to have correct measured data
+  //if( !lock_send_message_to_sd_thread ) lock_send_message_to_sd_thread = 1;
+  lock_send_message_to_sd_thread = 1;
+  
   sd_param.type = SD_EVENT;
   
   // sends a message SD_EVENT to write data to sd card
