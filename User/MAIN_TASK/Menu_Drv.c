@@ -1103,7 +1103,10 @@ void EditParam( char ButNum )
     //выключаем курсор
     blink_control(0);
     
-    preInitDAC( &(Channel[CurChannel]), CurChannel );
+    // blocks to send unnecessary message to Oscilation thread
+    // if current editing parameter is not frequency
+    if( CurEditParam != 2 )
+      preInitDAC( &(Channel[CurChannel]), CurChannel );
     
     return;
   }
@@ -1118,7 +1121,16 @@ void EditParam( char ButNum )
       ReDrawParam( &tempParam );	  // рисуем измененнный параметр на LCD
 
       //переводим курсор на позицию редактирования
-      shift_blink( tempParam.bg_pos_x, tempParam.bg_pos_y ); 
+      shift_blink( tempParam.bg_pos_x, tempParam.bg_pos_y );
+      
+      if( CurEditParam == 2 )  // if current editing parameter is frequency
+      {
+	//вносим изменения в глобальную структуру
+	ptempParam->cur = temp;
+	
+	// send message to Oscilation thread
+	preInitDAC( &(Channel[CurChannel]), CurChannel );
+      }
     }
   }
   else if( ButNum == 13 )	          //если нажата кнопки "-"
@@ -1132,6 +1144,15 @@ void EditParam( char ButNum )
   
       //переводим курсор на позицию редактирования
       shift_blink(tempParam.bg_pos_x, tempParam.bg_pos_y); 
+      
+      if( CurEditParam == 2 )  // if current editing parameter is frequency
+      {
+	//вносим изменения в глобальную структуру
+	ptempParam->cur = temp;
+	
+	// send message to Oscilation thread
+	preInitDAC( &(Channel[CurChannel]), CurChannel );
+      }
     }
   }
 }
