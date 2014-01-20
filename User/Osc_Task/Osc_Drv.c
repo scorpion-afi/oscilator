@@ -244,7 +244,7 @@ void CalcSin(void)
   uint16_t Ampl;
   static uint16_t Offset;
   
-  static call_cnt = 0;  // this variable stores number of function calling
+  //static call_cnt = 0;  // this variable stores number of function calling
 
   ptemp = pDAC_Buff; 
    
