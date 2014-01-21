@@ -12,8 +12,9 @@
 
   typedef struct 
   {
-    int typeEvent;  //тип события(нажата(ButtonOn), зажата(ButtonPress))
-    int num;        //номер кнопки(0-7 или 0-11, в зависимости от типа клавиатуры)    
+    int typeEvent[8];  //тип события(нажата(ButtonOn), зажата(ButtonPress))
+    int num;        //номер кнопки(0-7 или 0-11, в зависимости от типа клавиатуры) 
+    char button_event_set[8];	// set of button events
   }sKeyMesg;
       
   // Инициализация задачи опроса кнопок
@@ -22,7 +23,7 @@
   //опрос KeyPad клавиатуры
   // возвращяет информацию о типе события и номере кнопки
   // если события нету, то typeEvent = -1
-  GLB_PBDrv sKeyMesg GetKeyPadState(void);
+  GLB_PBDrv int GetKeyPadState( sKeyMesg* temp);
     
 #ifdef PBDrv
   
@@ -43,7 +44,7 @@
     void initGPIO_Pads(void);
     
     // Опрос нажатия/отжатия кнопок (return: 1 - нажата только ОДНА кнопка)
-    int GetSst_Key(void);
+    void GetSst_Key(void);
     
     // State Machine для  кнопок
     int Key_State_machine(sButtonDescr *ButtonDescr);

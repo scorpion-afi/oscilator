@@ -62,25 +62,31 @@ void InitPad_Task(void)
 //возвращ€ет структуру sKeyMesg, в которой указываетс€ тип событи€ и номер кнопки(0 - 7)
 // если поле typeEvent равно -1, то событие не произошло
 //===================================================================================
-sKeyMesg GetKeyPadState(void)
-{
-  sKeyMesg temp;
-    
-  temp.typeEvent = -1;
- 
-  if(GetSst_Key())    //если нажата только ќƒЌј кнопка, также заполн€ютс€ структуры ButtonDescr_K
+int GetKeyPadState( sKeyMesg* temp)
+{    
+  int flag = 0;
+  
+  // clear set of button events abd array of type events 
+  for( int i = 0; i < 8; i++ )
   {
-    for(int i = 0; i < 8; i++)
+    temp->button_event_set[i] = 0;
+    temp->typeEvent[i] = -1;   
+  }
+ 
+  //если нажата только ќƒЌј кнопка, также заполн€ютс€ структуры ButtonDescr_K
+  GetSst_Key();    
+
+  for( int i = 0; i < 8; i++ )
+  {
+    temp->typeEvent[i] = Key_State_machine( &ButtonDescr_K[i] );
+    if( temp->typeEvent[i] != -1 )
     {
-      temp.typeEvent = Key_State_machine(&ButtonDescr_K[i]);
-      if(temp.typeEvent != -1)
-      {
-        temp.num = i;
-        break;
-      }
+      flag = 1;
+      temp->button_event_set[i] = 1;
     }
-  } 
-  return temp; 
+  }
+
+  return flag; 
 }
 
 
@@ -94,24 +100,16 @@ sKeyMesg GetKeyPadState(void)
 // заполн€ем пол€ Sst структур ButtonDescr_K.
 //возвращ€ет 1 - нажата только ќƒЌј кнопка,
 //           0 - в один момент времени нажато несколько кнопок.
-int GetSst_Key(void)
+void GetSst_Key(void)
 {
-  int temp;
-  
-  temp = 0;
-  
-  for(int i = 0; i < 8; i++)
+  for( int i = 0; i < 8; i++ )
   {      
     //нажата ли  кнопка (кнопка посажена одним контактом на землю)
-    if( (ButtonDescr_K[i].ID & GPIO_ReadInputData(ButtonDescr_K[i].PortName)) == ButtonDescr_K[i].ID )
+    if( ( ButtonDescr_K[i].ID & GPIO_ReadInputData( ButtonDescr_K[i].PortName ) ) == ButtonDescr_K[i].ID )
       ButtonDescr_K[i].Sst = 0;  // не нажата / отжата 
     else
-    {
-      if(++temp > 1) return 0;  // если в один момент времени нажато несколько кнопок 
       ButtonDescr_K[i].Sst = 1;  // нажата / не отжата
-    }
   }
-  return 1; 
 }
 
 //===================================================================================
