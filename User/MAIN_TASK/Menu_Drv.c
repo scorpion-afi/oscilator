@@ -20,7 +20,7 @@
   char Acronym_F[] = "F=";
   char Acronym_D[] = "D = ";
   char Acronym_M[] = "m = ";
-  char Acronym_var[] = "ъ = ";  //variation
+  char Acronym_var[] = "ь = ";  //variation
   
   char Unit_B[] = "B";
   char Unit_Hz[] = "Hz";

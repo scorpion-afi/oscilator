@@ -214,16 +214,16 @@ void sweep_freq_control( int cur_channel )
 //!!!
 //
 //==============================================================================
-void ChangeChar(char *pStr)
+void ChangeChar( char *pStr )
 {
-  while(*pStr != 0)
+  while( *pStr != 0 )
   {
-    if(*pStr == '�') *pStr = 0xFF;   //������ ������ ���������
-    else if(*pStr == '�') *pStr = 0x01;   //������ �����(���������, ����� � CGRAM)
-      pStr++;
+    if( *pStr == 'ъ' )      *pStr = 0xFF;   // black square symbol
+    else if( *pStr == (char)'ь' ) *pStr = 0x01;   // sigma symbol ( storing in CGRAM)
+    
+    pStr++;
   }
 }
-
 
 
 

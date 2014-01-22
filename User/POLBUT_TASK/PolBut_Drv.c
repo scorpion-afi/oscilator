@@ -69,6 +69,7 @@ int get_key_pad_state( sKeyMesg* temp )
 {    
   int some_button_pressed_yet = 0;
   int must_send_message = 0;
+  int j = 0;
 
   if( !temp ) return 0;
 
@@ -77,32 +78,32 @@ int get_key_pad_state( sKeyMesg* temp )
 
   for( int i = 0; i < 8; i++ )
   {
-	// get changed state of button
-	temp->typeEvent = Key_State_machine( &ButtonDescr_K[i] );
+    // get changed state of button
+    temp->typeEvent = Key_State_machine( &ButtonDescr_K[i] );
 
     if( temp->typeEvent != -1 )
     {
       // find previosly pressed button, j will store this value, if some_button_pressed_yet == 1
-      for( int j = 0; j < 8; j++ )
+      for( j = 0; j < 8; j++ )
       {
     	// if we found button wth state 'on' (1) and this is not current pressed button
-	    if( ( ButtonDescr_K[j].state == 1 ) && ( j != i ) )
-	    {
-		  some_button_pressed_yet = 1;
-		  break;
-	    }
+        if( ( ButtonDescr_K[j].state == 1 ) && ( j != i ) )
+        {
+          some_button_pressed_yet = 1;
+          break;
+        }
       }
 
       // we must send message TWO_BUTTON_PRESSED and transmit codes of two pressed buttons
       if( some_button_pressed_yet )
       {
         temp->typeEvent = TWO_BUTTON_PRESSED;
-	    temp->prev_but_num = j;
+        temp->prev_but_num = j;
       }
 
       temp->num = i;
       must_send_message = 1;
-	  break;
+      break;
     }
   }
 
