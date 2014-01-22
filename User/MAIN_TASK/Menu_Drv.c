@@ -775,12 +775,12 @@ void InitView(void)
 void MenuStateMach( const s_pol_button* message )
 {
   int ButNum = 0;
-
+  
   // if message is double click
   if( message->is_double_click )
     ButNum = (int)( message->prev_but_num << 12 ) | (int)( message->num << 8 );
   else
-	ButNum = message->num;
+    ButNum = message->num;
 
   // blocking buttons, except '+' ans '-', in measuring mode
   if( ( is_meas_mode ) && ( ButNum != 6 ) && ( ButNum != 7 ) )
@@ -789,7 +789,8 @@ void MenuStateMach( const s_pol_button* message )
   }
    
   sSignalParam tmpSig;
-
+  s_pol_button temp_1;
+  
   // ��������� ������� KeyPad
   switch( ButNum )
   {
@@ -949,7 +950,14 @@ void MenuStateMach( const s_pol_button* message )
     
     case CS_SF:    // Channel select + Signal Form
     {
-    	sweep_freq_control( CurChannel );
+      temp_1.is_double_click = 0;
+      temp_1.num = 0;     // Channel select
+      
+      // emulate 'Channel select' button pressed event
+      // to switch back to channel, on which 'Channel select + Signal Form' has been occurred
+      MenuStateMach( &temp_1 );
+      
+      sweep_freq_control( CurChannel );
     }
     break;
 
