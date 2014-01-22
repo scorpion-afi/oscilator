@@ -17,10 +17,6 @@
 #define Freq_koef  Nph_reg/Fsamples
 #define Phase_koef Nph_reg/(2*pi)
 
-#define FREQ_SWEEP
-
-#ifdef FREQ_SWEEP
-
 // 400 000 byte per second / 2048 byte = 195.3125
 // it is DMA2_Channel3_IRQHandler() frequency calling, and we can say,
 // that and CalcSin() function too
@@ -32,8 +28,6 @@
 
 float sweep_rate =  11.0f; 	// 11 Hz per second
 char sweep_direction = 0;   // 0 - up, 1 - down
-
-#endif
 
 //extern void sound(int T, int num);
 
@@ -148,7 +142,7 @@ void InitDAC_TIM_DMA(void)
 void ReFill(void)
 { 
   //������ ����������� �����
-  if(CurFillArea == 0)
+  if( CurFillArea == 0 )
   {
     CurFillArea = 1;
     pDAC_Buff = DAC_Buff + size_of_DAC_Buff/2;
@@ -161,23 +155,33 @@ void ReFill(void)
   
   CurDAC_Ch = 0;
   
-#ifdef FREQ_SWEEP
-  sweep_control();
-#endif
+  // if current signal is not noise
+  if( CurOscParam[CurDAC_Ch].Sig_Type != 6 )
+  {
+	// if frequency sweeping is allowed
+	if( CurOscParam[CurDAC_Ch].is_freq_sweep_on )
+	{
+	  sweep_control();
+	}
 
-  //���� ����� �������������
-  if(CurOscParam[CurDAC_Ch].Sig_Type != 6)  
-    pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type](); //����� �������, ������������� �� ���������� �������� �������� ������� �������� ������
+	// calculates necessary samples, of selected signal, for current channel
+    pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type]();
+  }
 
   CurDAC_Ch = 1;
   
-#ifdef FREQ_SWEEP
-  sweep_control();
-#endif
+  // if current signal is not noise
+  if( CurOscParam[CurDAC_Ch].Sig_Type != 6 )
+  {
+	// if frequency sweeping is allowed
+	if( CurOscParam[CurDAC_Ch].is_freq_sweep_on )
+	{
+	  sweep_control();
+	}
 
-  //���� ����� �������������
-  if(CurOscParam[CurDAC_Ch].Sig_Type != 6)  
-    pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type](); //����� �������, ������������� �� ���������� �������� �������� ������� �������� ������
+	// calculates necessary samples, of selected signal, for current channel
+    pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type]();
+  }
 }
 
 // ������� ������ ������� ������ �� ������ x �/��� ��� ��������� 
@@ -203,7 +207,18 @@ void ReCalc(const sOscParam *pOscParam)
   pDSPFunction[CurOscParam[CurDAC_Ch].Sig_Type]();    
 }
 
-#ifdef FREQ_SWEEP
+// this function switch on/off of frequency sweeping
+// pOscParam - poiter to message from Menu thread
+//=================================================================================
+void sweep_on_off( int ch_num )
+{
+   // if, on this channel, frequency sweeping is on yet, then turn off it
+   if( CurOscParam[ch_num].is_freq_sweep_on )
+	 CurOscParam[ch_num].is_freq_sweep_on = 0;
+   else
+     CurOscParam[ch_num].is_freq_sweep_on = 1;
+}
+
 // this function must be called with DDS_IRQ_FREQ frequency to correct work flow
 // this function controls sweeping of frequency for current signal on current channel
 //==============================================================================
@@ -228,7 +243,6 @@ void sweep_control( void )
 
     FREQ_REG[CurDAC_Ch] = (uint32_t)( CurOscParam[CurDAC_Ch].freq*Freq_koef + 0.5 );
 }
-#endif
 
 //=================================================================================
 //=================================================================================

@@ -1,23 +1,23 @@
 
-// SYSCLK = HCLK =  72 МГц.
-// PCLK1  =         36 МГц.
-// PCLK2  =         72 МГц.
+// SYSCLK = HCLK =  72 пїЅпїЅпїЅ.
+// PCLK1  =         36 пїЅпїЅпїЅ.
+// PCLK2  =         72 пїЅпїЅпїЅ.
 
 #define MAIN
 #include "main.h"
 
-#include "PolBut_Task.h"    //определение функции-потока PBTask
-#include "Menu_Task.h"      //определение функции-потока MTask
-#include "LCD_Task.h"       //определение функции-потока LCDTask
-#include "Osc_Task.h"       //определение функции-потока BeepTask
+#include "PolBut_Task.h"    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ PBTask
+#include "Menu_Task.h"      //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ MTask
+#include "LCD_Task.h"       //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ LCDTask
+#include "Osc_Task.h"       //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ BeepTask
 #include "Meas_Task.h"      // vMeasTask function declaration
 #include "Calc_Task.h"      // vCalcTask function declaration
 #include "SD_Task.h"        // vSDTask function declaration
 
-#include "InterDefines.h"   //определение sLCDParam и sOscParam
+#include "InterDefines.h"   //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ sLCDParam пїЅ sOscParam
 
 #include "stm32f10x.h"            
-//extern uint32_t SystemCoreClock;  //SystemCoreClock - текущяя SYSCLK
+//extern uint32_t SystemCoreClock;  //SystemCoreClock - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ SYSCLK
 
 // only for printing Loading...
 #include "LCD_Drv.h"
@@ -29,7 +29,7 @@ RCC_ClocksTypeDef kyky;
 RCC_GetClocksFreq( &kyky );
 */
 
-//точка входа
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 //=======================================================================================
 int main( void )
 {  
@@ -46,13 +46,13 @@ int main( void )
   //EXTI_GenerateSWInterrupt( EXTI_Line4 ); 
   //while( 1 );
   
-  //по требованиям FreeRTOS
+  //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ FreeRTOS
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
-  //создание задач, очередей и других обьектов ОС
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
   if( Create_OS_Objects() != 0 )
   {
-    // запускаем планировщик
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     vTaskStartScheduler();
   }  
   
@@ -123,9 +123,9 @@ void init_exti( void )
   NVIC_Init( &NVIC_InitStructure ); 
 }
 
-// Создаем обьекты ОС
-//возвращяемый результат: 1 - все обекты создать удалось
-//                        0 - не удалось
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: 1 - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//                        0 - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //===================================================================================
 int Create_OS_Objects( void )
 { 
@@ -133,15 +133,15 @@ int Create_OS_Objects( void )
  
   // queues creation
   
-  //создаем очередь для взаимодействия между PBTask и MTask
-  qPB_to_M = xQueueCreate( 5, sizeof( char ) );
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ PBTask пїЅ MTask
+  qPB_to_M = xQueueCreate( 5, sizeof( s_pol_button ) );
   if( qPB_to_M == NULL ) return 0;
   
-  //создаем очередь для взаимодействия между MTask и LCDTask
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ MTask пїЅ LCDTask
   qM_to_LCD = xQueueCreate( 5, sizeof( sLCDParam ) );
   if( qM_to_LCD == NULL ) return 0;
   
-  //создаем очередь для взаимодействия с OscTask
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ OscTask
   qTo_Osc = xQueueCreate(5 , sizeof( sOscParam ) );
   if( qTo_Osc == NULL ) return 0;  
   
@@ -170,37 +170,37 @@ int Create_OS_Objects( void )
  
   //  Idle Task - priority 0
   
-  //создаем задачу(поток) PBTask с приоритетом, равным 2
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅ) PBTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 2
   rez = xTaskCreate( vPBTask, "PBTask", 256, NULL, 1, NULL );
   if( rez != pdPASS ) return 0;
   
-  //создаем задачу(поток) MTask с приоритетом, равным 3
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅ) MTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 3
   rez = xTaskCreate( vMTask, "MTask", 800, NULL, 2, NULL );
   if( rez != pdPASS ) return 0;
    
-  //создаем задачу(поток) LCDTask с приоритетом, равным 4
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅ) LCDTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 4
   rez = xTaskCreate( vLCDTask, "LCDTask", 256, NULL, 4, NULL );
   if( rez != pdPASS ) return 0;
   
-  //создаем задачу(поток) OscTask с приоритетом, равным 5
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅ) OscTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 5
   rez = xTaskCreate( vOscTask, "OscTask", 512, NULL, 5, NULL );
   if( rez != pdPASS ) return 0;
   
-  //создаем задачу (поток) CalcTask с приоритетом, равным 4
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ) CalcTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 4
   rez = xTaskCreate( vCalcTask, "CalcTask", 256, NULL, 3, NULL );
   if( rez != pdPASS )
   {
     return 0;
   } 
   
-  //создаем задачу (поток) SDTask с приоритетом, равным 4
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ) SDTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 4
   rez = xTaskCreate( vSDTask, "SDTask", 256, NULL, 4, NULL );
   if( rez != pdPASS )
   {
     return 0;
   }
   
-  //создаем задачу (поток) MeasTask с приоритетом, равным 4
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ) MeasTask пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ 4
   rez = xTaskCreate( vMeasTask, "MeasTask", 256, NULL, 4, NULL );
   if( rez != pdPASS )
   {

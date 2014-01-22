@@ -1,5 +1,5 @@
 
-//драйвер клавиатур
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 #ifdef PBDrv
   #define GLB_PBDrv 		
@@ -9,47 +9,53 @@
 
   #define ButtonOn 1
   #define ButtonPress 2
+  #define TWO_BUTTON_PRESSED 3
 
   typedef struct 
   {
-    int typeEvent[8];  //тип события(нажата(ButtonOn), зажата(ButtonPress))
-    int num;        //номер кнопки(0-7 или 0-11, в зависимости от типа клавиатуры) 
-    char button_event_set[8];	// set of button events
+    int typeEvent;  //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅ(ButtonOn), пїЅпїЅпїЅпїЅпїЅпїЅ(ButtonPress), TWO_BUTTON_PRESSED)
+    int num;        //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(0-7 пїЅпїЅпїЅ 0-11, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) 
+    int prev_but_num; // number of previosly pushed buttons
   }sKeyMesg;
       
-  // Инициализация задачи опроса кнопок
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
   GLB_PBDrv void InitPad_Task(void);
   
-  //опрос KeyPad клавиатуры
-  // возвращяет информацию о типе события и номере кнопки
-  // если события нету, то typeEvent = -1
-  GLB_PBDrv int GetKeyPadState( sKeyMesg* temp);
+  //пїЅпїЅпїЅпїЅпїЅ KeyPad пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+  // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ typeEvent = -1
+
+  // polls all buttons and fills temp
+  // return 0, if no new events were occured, otherwise: 1
+  GLB_PBDrv int get_key_pad_state( sKeyMesg* temp );
     
 #ifdef PBDrv
   
     #include "stm32f10x.h"
   
-    // структура, описывающяя  кнопку
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅ
     typedef struct 
     {
-      int Sst;                // нажата(не отжата) /не нажата(отжата) (1/0)
-      int cnt;	              // счетчик 
-      int presscnt;           // еще один счетчик
-      int state;	      // состояние кнопки
-      uint16_t ID;            // код кнопки   GPIO_Pin0...15
-      GPIO_TypeDef* PortName; // имя порта GPIOA...C
+      int Sst;                // пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ) /пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅ) (1/0)
+      int cnt;	              // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
+      int presscnt;           // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+      int state;	      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+      uint16_t ID;            // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ   GPIO_Pin0...15
+      GPIO_TypeDef* PortName; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ GPIOA...C
     }sButtonDescr;
     
-    //настройка портов в/в для клавиатур
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ/пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     void initGPIO_Pads(void);
     
-    // Опрос нажатия/отжатия кнопок (return: 1 - нажата только ОДНА кнопка)
-    void GetSst_Key(void);
+    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (return: 1 - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
+
+    // monitors i/o lines, with connected buttons, and fills ButtonDescr_K[].Sst values
+    void get_sst_key( void );
     
-    // State Machine для  кнопок
+    // State Machine пїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅ
     int Key_State_machine(sButtonDescr *ButtonDescr);
   
-    // массив структур sButtonDescr для 8 кнопок (KeyPad)
+    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ sButtonDescr пїЅпїЅпїЅ 8 пїЅпїЅпїЅпїЅпїЅпїЅ (KeyPad)
     sButtonDescr ButtonDescr_K[8];
     
     GPIO_InitTypeDef          GPIO_InitStruc_Pad;

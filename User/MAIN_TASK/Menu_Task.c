@@ -6,36 +6,31 @@
 
 #include "Menu_Drv.h"
 
-#include "InterDefines.h"   //определение sBeepParam, sLCDParam
+// this file is included in Menu_Drv.h
+//#include "InterDefines.h"   // declaration of sBeepParam, sLCDParam, s_pol_button
 
-#include "CommonDefines.h"  //для взаимодействия с FreeRTOS
+#include "CommonDefines.h"  //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ FreeRTOS
  
 void preInitDAC( const sChannel *ptr, char curCh );
 
-// функция, релизующяя поток MTask
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ MTask
 //==============================================================================
-void vMTask(void *pvParameters)
+void vMTask( void* pvParameters )
 { 
-  //сообщение от PBTask
-  char PBMessage;
-  
-  char ButNum;
-  char isKeyPad;
-  char EventType; 
-  
+  s_pol_button message;
+
   InitView(); 
      
-  while(1)
+  while( 1 )
   { 
-    //ждем прихода сообщения от PBTask
-    xQueueReceive(qPB_to_M, (void *)&PBMessage, portMAX_DELAY);
+    //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ PBTask
+    xQueueReceive( qPB_to_M, (void *)&message, portMAX_DELAY );
        
-    isKeyPad = PrepareMesg( PBMessage, &ButNum, &EventType );
-    MenuStateMach( ButNum, EventType, isKeyPad );
+    MenuStateMach( &message );
   } 
   
-  // Уничтожить задачу, если произошел выход из бесконечного цикла  
-  vTaskDelete(NULL);
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  
+  vTaskDelete( NULL );
 }
 
 
@@ -43,10 +38,10 @@ void vMTask(void *pvParameters)
 //==============================================================================
 //==============================================================================
 
-
-// Обработка сообщения от PBTask 
+/*
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ PBTask 
 //==============================================================================
-char PrepareMesg( char Mesg, char *ButNum, char *EventType )
+char PrepareMesg( const s_pol_button* message, s_key_event* key_event  )
 {
   char temp;
   char dig;
@@ -56,10 +51,10 @@ char PrepareMesg( char Mesg, char *ButNum, char *EventType )
   else if((Mesg & 0xE0) == (0x02<<5))         // ButtonPress
     *EventType = 2;
 
-  //temp = Mesg & 0x01;             // получаем тип клавиатуры
+  //temp = Mesg & 0x01;             // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   temp = 1;
   
-  dig = (Mesg & 0x1E)>>1;         // получаем номер кнопки
+  dig = (Mesg & 0x1E)>>1;         // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     
   *ButNum = dig;
       
@@ -74,8 +69,9 @@ char PrepareMesg( char Mesg, char *ButNum, char *EventType )
   
   return temp;  
 }
+*/
 
-//записывает в жки строку pStr на позицию (x, y)
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ pStr пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (x, y)
 //==============================================================================
 void lcd_write(char *pStr, char x, char y)
 { 
@@ -83,7 +79,7 @@ void lcd_write(char *pStr, char x, char y)
   
   temp.ID_cmd = 0; //SendString(pData, param_1, param_2)
   
-  //заменяем символы, которые нельзя отобразить в редакторе кода, их ASCII кодами
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ ASCII пїЅпїЅпїЅпїЅпїЅпїЅ
   ChangeChar(pStr);
 
   temp.pData  = pStr;
@@ -93,7 +89,7 @@ void lcd_write(char *pStr, char x, char y)
   xQueueSend(qM_to_LCD, (void *)&temp, portMAX_DELAY);
 }
 
-//сдвигаем курсор на позицию (x, y)
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (x, y)
 //==============================================================================
 void shift_blink(char x, char y)
 {
@@ -107,8 +103,8 @@ void shift_blink(char x, char y)
   xQueueSend(qM_to_LCD, (void *)&temp, portMAX_DELAY); 
 }
 
-//выключаем курсор 
-// isOn - если 1, то курсор включен
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
+// isOn - пїЅпїЅпїЅпїЅ 1, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //==============================================================================
 void blink_control(int isOn)
 {
@@ -123,22 +119,22 @@ void blink_control(int isOn)
   xQueueSend(qM_to_LCD, (void *)&temp, portMAX_DELAY); 
 }
 
-// переинициализация DAC
-// ptr - указатель на структуру типа sChannel, откуда извлекается информация
-// для отправки потоку Osc_Thread
-// curCh - текущий канал ( 0 - Channel 1, 1 - Channel 2 )
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DAC
+// ptr - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ sChannel, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Osc_Thread
+// curCh - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ( 0 - Channel 1, 1 - Channel 2 )
 //==============================================================================
 void preInitDAC(const sChannel *ptr, char curCh)
 {
   sOscParam temp;
   
-  //если канал не включен, то и не надо посылать сообщение
+  //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   if(ptr->isOn != 1) return;   
   
   temp.Ch_num = curCh;
   temp.Sig_Type = ptr->CurSigForm;
   
-  //для сигналов-шумов
+  //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ
   if((temp.Sig_Type == 4) || (temp.Sig_Type == 5))
   {
     temp.amp = ptr->SignalParam[ptr->CurSigForm].Param[5].cur;   
@@ -156,8 +152,8 @@ void preInitDAC(const sChannel *ptr, char curCh)
   xQueueSend(qTo_Osc, (void *)&temp, portMAX_DELAY);
 }
 
-//выключение канала ЦАПа
-//ChNum - номер канала, который нужно выключить
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+//ChNum - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //==============================================================================
 void Off_DAC_Channel(char ChNum)
 { 
@@ -193,13 +189,27 @@ void sd_control( void )
   xQueueSend( queu_to_sd, (void *)&sd_param, portMAX_DELAY );
 }
 
+// send message to on/off frequency sweeping to Oscillation thread
+// curCh - number of channel to apply changes
+// is_sweep_on: 1 - on, 0 - off
+//==============================================================================
+void sweep_freq_control( int cur_channel )
+{
+  sOscParam temp;
+
+  temp.Sig_Type = SWEEP_CONTROL;
+  temp.Ch_num = cur_channel;
+
+  xQueueSend( qTo_Osc, (void *)&temp, portMAX_DELAY );
+}
+
 //
-// pStr - указатель на нуль-терминированную строку
+// pStr - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 //
 //!!!
 //
-// место потенциальной ошибки, если данные лежат во флеш памяти,
-// то попытка их модификации приведет к Hard fault exception
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ,
+// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Hard fault exception
 //
 //!!!
 //
@@ -208,8 +218,8 @@ void ChangeChar(char *pStr)
 {
   while(*pStr != 0)
   {
-    if(*pStr == 'ъ') *pStr = 0xFF;   //символ черный квадратик
-    else if(*pStr == 'ь') *pStr = 0x01;   //символ сигма(нарисован, лежит в CGRAM)
+    if(*pStr == 'пїЅ') *pStr = 0xFF;   //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    else if(*pStr == 'пїЅ') *pStr = 0x01;   //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅ CGRAM)
       pStr++;
   }
 }

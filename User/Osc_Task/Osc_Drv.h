@@ -11,6 +11,7 @@
   GLB_OscDrv void InitDAC_TIM_DMA(void);
   GLB_OscDrv void ReFill(void);
   GLB_OscDrv void ReCalc(const sOscParam *pOscParam);
+  GLB_OscDrv void sweep_on_off( int ch_num );
   
 #ifdef OscDrv
   
