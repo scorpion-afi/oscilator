@@ -83,22 +83,27 @@ int get_key_pad_state( sKeyMesg* temp )
 
     if( temp->typeEvent != -1 )
     {
-      // find previosly pressed button, j will store this value, if some_button_pressed_yet == 1
-      for( j = 0; j < 8; j++ )
+      // if current state of i-button is 'on' (1)
+    							// generate double-click event
+      if( temp->typeEvent == 1 )
       {
-    	// if we found button wth state 'on' (1) and this is not current pressed button
-        if( ( ButtonDescr_K[j].state == 1 ) && ( j != i ) )
-        {
-          some_button_pressed_yet = 1;
-          break;
-        }
-      }
+		// find previosly pressed button, j will store this value, if some_button_pressed_yet == 1
+		for( j = 0; j < 8; j++ )
+		{
+		  // if we found button wisth state 'on' (1) and this is not current pressed button
+		  if( ( ButtonDescr_K[j].state == 1 ) && ( j != i ) )
+		  {
+			some_button_pressed_yet = 1;
+			break;
+		  }
+		}
 
-      // we must send message TWO_BUTTON_PRESSED and transmit codes of two pressed buttons
-      if( some_button_pressed_yet )
-      {
-        temp->typeEvent = TWO_BUTTON_PRESSED;
-        temp->prev_but_num = j;
+		// we must send message TWO_BUTTON_PRESSED and transmit codes of two pressed buttons
+		if( some_button_pressed_yet )
+		{
+		  temp->typeEvent = TWO_BUTTON_PRESSED;
+		  temp->prev_but_num = j;
+		}
       }
 
       temp->num = i;
