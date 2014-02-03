@@ -1,18 +1,28 @@
 
-//обьявление типов сообщений
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-//структура сообщения к потоку LCD_Task
+// struct for communication between Polling button thread and Menu thread
+typedef struct
+{
+  char EventType;
+  char isKeyPad;
+  char is_double_click; // is double click occured ?  1 - yes
+  char num;			    // code of pressed button
+  char prev_but_num;	// code of previosly pressed button
+}s_pol_button;
+
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ LCD_Task
 typedef struct 
 {
-  //ID команды
+  //ID пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   // 0 - SendString(pData, param_1, param_2)
   // 1 - ShiftBlink(param_1, param_2)
   // 2 - ControlBlink(param_1, param_2, param_3)
   char ID_cmd;  
   
-  //указатель на, динамически выделенную память,
-  //в которой лежат данные к отображению
-  //после отображения по этому указателю память должна быть освобождена
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ,
+  //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+  //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   char *pData;
   
   char param_1;
@@ -20,22 +30,25 @@ typedef struct
   char param_3;
 }sLCDParam;
 
-//структура сообщения к потоку Osc_Task
+typedef enum Sig_Type_ { SIN = 0, PULSE, EXP, SAWTOO, GAUS, UNIFORM, ZERO, DMA, SWEEP_CONTROL } Sig_Type_t;
+
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Osc_Task
 typedef struct 
 {
   char Ch_num;     // 0 - Channel 1, 1 - Channel 2
   char Sig_Type;   // 0 - sin, 1 - pulse, 2 - inv_pulse, 3 - triangl, 4 - gaus noise,
-                   // 5 - uniform noise, 6 - zero("switch off" generator), 7 - DMA_Interrupt 
-  float amp;       //для  Sig_Type = 4 и 5 - СКО 
-  float offset;    //для  Sig_Type = 4 и 5 - математическое ожидание 
+                   // 5 - uniform noise, 6 - zero("switch off" generator), 7 - DMA_Interrupt, 8 - for sweeping control
+  float amp;       //пїЅпїЅпїЅ  Sig_Type = 4 пїЅ 5 - пїЅпїЅпїЅ 
+  float offset;    //пїЅпїЅпїЅ  Sig_Type = 4 пїЅ 5 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
   float duty;
   float freq; 
+  char is_freq_sweep_on; // is frequency sweeping allowed ?  1 - allowed, 0 - not allowed
 }sOscParam;
 
 
 typedef enum sd_type { SD_STOP = 0, SD_START, SD_WRITE, SD_EVENT } sd_type_t;
 
-//структура сообщения к потоку SD_Task
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ SD_Task
 typedef struct S_Sd_Param 
 {
   sd_type_t type;       // operation type

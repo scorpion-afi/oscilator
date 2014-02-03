@@ -4,61 +4,76 @@
 #define PBTask
 #include "PolBut_Task.h"
 
-#include "PolBut_Drv.h"      //для вызова функций драйвера клавиатур
+#include "PolBut_Drv.h"      //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-#include "CommonDefines.h"  //для взаимодействия с FreeRTOS
+#include "CommonDefines.h"  // for communication with FreeRTOS
+
+#include "InterDefines.h"   // declaration of s_pol_button
+
+void send_polbut_message( const sKeyMesg* temp );
 
 //sKeyMesg KPadGL;
-// функция, релизующяя поток PBTask
+
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ PBTask
 //==============================================================================
-void vPBTask(void *pvParameters)
+void vPBTask( void* pvParameters )
 { 
   sKeyMesg KPad;
   portTickType xLastWakeTime;
   
-  //инициализация аппаратуры, связанной с опросом клавиатур
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   InitPad_Task();
   
-  //вызывается только один раз
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
   xLastWakeTime = xTaskGetTickCount();
   
-  while(1)
+  while( 1 )
   { 
-    // Задержка на 10 миллисекунд
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 10 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     vTaskDelayUntil( &xLastWakeTime, ( 10 / portTICK_RATE_MS ) );
         
-    //опрос состояний кнопок KeyPad клавиатуры 
+    //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ KeyPad пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
     //KPad.num: 0 - 7
-    KPad = GetKeyPadState();
-    
-    //KPadGL = KPad;
-    if(KPad.typeEvent != -1)
-      Send_PolBut_Message(KPad.typeEvent, 1, KPad.num);  
+
+    // if we have some event on keyboard
+    if( get_key_pad_state( &KPad ) )
+      send_polbut_message( &KPad );
    } 
 
-  // Уничтожить задачу, если произошел выход из бесконечного цикла  
-  vTaskDelete(NULL);
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  
+  vTaskDelete( NULL );
 }
 
-// Посылка сообщения  в очередь потоку MTask
-//typeEvent - тип события
-//typePad - тип клавиатуры (1 - KeyPad, 0 - MatrixPad)
-//num - номер кнопки(0-7 или 0-11)
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ MTask
+//typeEvent - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//typePad - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (1 - KeyPad, 0 - MatrixPad)
+//num - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(0-7 пїЅпїЅпїЅ 0-11)
 
-// очередь к потоку Main_Task состоит из 5 элементов
-// размер элемента - 1 байт
-// 7:5 биты: тип события(1 - ButtonOn, 2 - ButtonPress)
-// 4:1 биты: номер кнопки (0-7 или 0-11)
-// 0 бит: тип клавиатуры (1 - KeyPad, 0 - MatrixPad)
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Main_Task пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 5 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - 1 пїЅпїЅпїЅпїЅ
+// 7:5 пїЅпїЅпїЅпїЅ: пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ(1 - ButtonOn, 2 - ButtonPress)
+// 4:1 пїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (0-7 пїЅпїЅпїЅ 0-11)
+// 0 пїЅпїЅпїЅ: пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (1 - KeyPad, 0 - MatrixPad)
 //===================================================================================
-void Send_PolBut_Message(int typeEvent, int typePad, int num)
+void send_polbut_message( const sKeyMesg* temp )
 {
-  char value;
-    
-  value =  (char)(num<<1);
-  value |= (char)typePad;
-  value |= (char)(typeEvent<<5);
-  
-  //"зависнем" пока в очереди PB_to_M не появится свободное место
-  xQueueSend(qPB_to_M, (void *)&value, portMAX_DELAY);
+  s_pol_button message;
+
+  if( temp->typeEvent == TWO_BUTTON_PRESSED )
+  {
+	message.is_double_click = 1;
+	message.num = temp->num;
+	message.prev_but_num = temp->prev_but_num;
+  }
+  else
+  {
+    message.is_double_click = 0;
+	message.num = temp->num;
+	message.isKeyPad  = 1;  // only KeyPad
+	message.EventType = temp->typeEvent;
+  }
+
+  //"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ PB_to_M пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+  // send message to qPB_to_M queue
+  xQueueSend( qPB_to_M, (void *)&message, portMAX_DELAY );
 }

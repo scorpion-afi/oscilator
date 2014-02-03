@@ -7,12 +7,9 @@
   #define GLB_PBTask extern
 #endif
 
-// функция, релизующяя поток PBTask
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ PBTask
 GLB_PBTask void vPBTask(void *pvParameters);
 
 #ifdef PBTask
-
-  // Подготовка сообщения для отправки в очередь потоку MTask
-  void Send_PolBut_Message(int typeEvent, int typePad, int num);
   
 #endif

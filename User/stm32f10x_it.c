@@ -187,7 +187,7 @@ void TIM2_IRQHandler(void)
 //Генерация сигналов (Osc_xxx.c)
 
 //Обработчик прерываний от DMA2_Channel3 
-// will be called with x Hz frequence
+// will be called with 195.3125 Hz frequence
 //==============================================================================
 void DMA2_Channel3_IRQHandler(void)     //DAC_Channel1
 {  

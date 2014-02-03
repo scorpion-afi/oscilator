@@ -1,21 +1,21 @@
 
-//драйвер клавиатур
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 #define PBDrv	
 #include "PolBut_Drv.h"
 
-// вызов state machine  с периодом 10 мс
+// пїЅпїЅпїЅпїЅпїЅ state machine  пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 10 пїЅпїЅ
 
-int repet_count = 5;          //для антидребезга  (50 мс)
-int press_count = 100;        //для перехода в состояние ЗАЖАТО (1 с)
-int T_press = 20;             //для периодического извещения о зажатии кнопки (200 мс)
+int repet_count = 5;          //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  (50 пїЅпїЅ)
+int press_count = 100;        //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (1 пїЅ)
+int T_press = 20;             //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (200 пїЅпїЅ)
 
 
-// Инициализация задачи опроса кнопок
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 //===================================================================================
 void InitPad_Task(void)
 {
-  //настройка портов i/o
+  //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ i/o
   initGPIO_Pads();
   
   // KeyPad --------------------------------------------------------------------
@@ -55,70 +55,96 @@ void InitPad_Task(void)
   ButtonDescr_K[7].PortName = GPIOA;
 }
 
-//опрос KeyPad клавиатуры
-// эта функция должна вызываться периодически
-// GetSst_Key при каждом вызове узнает текущее состояние на ножках мк
-// Key_State_machine следит за состоянием каждой кнопки KeyPad клавиатуры 
-//возвращяет структуру sKeyMesg, в которой указывается тип события и номер кнопки(0 - 7)
-// если поле typeEvent равно -1, то событие не произошло
+//пїЅпїЅпїЅпїЅпїЅ KeyPad пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+// GetSst_Key пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+// Key_State_machine пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ KeyPad пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ sKeyMesg, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ(0 - 7)
+// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ typeEvent пїЅпїЅпїЅпїЅпїЅ -1, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+
+// polls all buttons and fills temp
+// return 0, if no new events were occured, otherwise - 1
 //===================================================================================
-sKeyMesg GetKeyPadState(void)
-{
-  sKeyMesg temp;
-    
-  temp.typeEvent = -1;
- 
-  if(GetSst_Key())    //если нажата только ОДНА кнопка, также заполняются структуры ButtonDescr_K
+int get_key_pad_state( sKeyMesg* temp )
+{    
+  int some_button_pressed_yet = 0;
+  int must_send_message = 0;
+  int j = 0;
+
+  if( !temp ) return 0;
+
+  // monitors i/o lines, with connected buttons, and fills ButtonDescr_K[].Sst values
+  get_sst_key();
+
+  for( int i = 0; i < 8; i++ )
   {
-    for(int i = 0; i < 8; i++)
+    // get changed state of button
+    temp->typeEvent = Key_State_machine( &ButtonDescr_K[i] );
+
+    if( temp->typeEvent != -1 )
     {
-      temp.typeEvent = Key_State_machine(&ButtonDescr_K[i]);
-      if(temp.typeEvent != -1)
+      // if current state of i-button is 'on' (1)
+    							// generate double-click event
+      if( temp->typeEvent == 1 )
       {
-        temp.num = i;
-        break;
+		// find previosly pressed button, j will store this value, if some_button_pressed_yet == 1
+		for( j = 0; j < 8; j++ )
+		{
+		  // if we found button wisth state 'on' (1) and this is not current pressed button
+		  if( ( ButtonDescr_K[j].state == 1 ) && ( j != i ) )
+		  {
+			some_button_pressed_yet = 1;
+			break;
+		  }
+		}
+
+		// we must send message TWO_BUTTON_PRESSED and transmit codes of two pressed buttons
+		if( some_button_pressed_yet )
+		{
+		  temp->typeEvent = TWO_BUTTON_PRESSED;
+		  temp->prev_but_num = j;
+		}
       }
-    }
-  } 
-  return temp; 
-}
 
-
-//===================================================================================
-//===================================================================================
-//===================================================================================
-
-
-//===================================================================================
-// Опрос текущего состояния кнопок для KeyPad клавиатуры
-// заполняем поля Sst структур ButtonDescr_K.
-//возвращяет 1 - нажата только ОДНА кнопка,
-//           0 - в один момент времени нажато несколько кнопок.
-int GetSst_Key(void)
-{
-  int temp;
-  
-  temp = 0;
-  
-  for(int i = 0; i < 8; i++)
-  {      
-    //нажата ли  кнопка (кнопка посажена одним контактом на землю)
-    if( (ButtonDescr_K[i].ID & GPIO_ReadInputData(ButtonDescr_K[i].PortName)) == ButtonDescr_K[i].ID )
-      ButtonDescr_K[i].Sst = 0;  // не нажата / отжата 
-    else
-    {
-      if(++temp > 1) return 0;  // если в один момент времени нажато несколько кнопок 
-      ButtonDescr_K[i].Sst = 1;  // нажата / не отжата
+      temp->num = i;
+      must_send_message = 1;
+      break;
     }
   }
-  return 1; 
+
+  return must_send_message;
 }
 
+
 //===================================================================================
-// State Machine для  кнопок
-//ButtonDescr - указатель на структуру sButtonDescr, описывающую кнопку
-//возвращяет тип события(ButtonOn или ButtonPress или -1, если нету события)
-//для текущей кнопки, которая идентифицируется ButtonDescr
+//===================================================================================
+//===================================================================================
+
+
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ KeyPad пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ Sst пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ButtonDescr_K.
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1 - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ,
+//           0 - пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+
+// monitors i/o lines, with connected buttons, and fills ButtonDescr_K[].Sst values
+//===================================================================================
+void get_sst_key( void )
+{
+  for( int i = 0; i < 8; i++ )
+  {      
+    //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
+    if( ( ButtonDescr_K[i].ID & GPIO_ReadInputData( ButtonDescr_K[i].PortName ) ) == ButtonDescr_K[i].ID )
+      ButtonDescr_K[i].Sst = 0;  // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅ 
+    else
+      ButtonDescr_K[i].Sst = 1;  // пїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+  }
+}
+
+// State Machine пїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅпїЅ
+//ButtonDescr - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ sButtonDescr, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ(ButtonOn пїЅпїЅпїЅ ButtonPress пїЅпїЅпїЅ -1, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ButtonDescr
+//===================================================================================
 int Key_State_machine(sButtonDescr *ButtonDescr)
 { 
   int temp;
@@ -127,9 +153,9 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
   
   switch(ButtonDescr->state)
   {
-    case 0:   // состояние ВЫКЛ.  OFF 
+    case 0:   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.  OFF 
     {
-        if(ButtonDescr->Sst) // нажата
+        if(ButtonDescr->Sst) // пїЅпїЅпїЅпїЅпїЅпїЅ
         {
             ButtonDescr->cnt++;
             if(ButtonDescr->cnt > repet_count)
@@ -142,14 +168,14 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
                 temp = ButtonOn;
             }
         }
-        else                  // не нажата
+        else                  // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             ButtonDescr->cnt = 0;
     }
     break;
     
-    case 1:   // состояние ВКЛ.  ON 
+    case 1:   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.  ON 
     {
-        if(!ButtonDescr->Sst) // отжата
+        if(!ButtonDescr->Sst) // пїЅпїЅпїЅпїЅпїЅпїЅ
         {
             ButtonDescr->cnt++;
             if(ButtonDescr->cnt > repet_count)
@@ -160,11 +186,11 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
                 //EventOff;                                      // 2
             }
         }
-        else                  // не отжата
+        else                  // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         {
             ButtonDescr->cnt = 0;
             ButtonDescr->presscnt++;
-            if(ButtonDescr->presscnt > press_count) // > 2 с
+            if(ButtonDescr->presscnt > press_count) // > 2 пїЅ
             {
                 ButtonDescr->state = 2;
                 
@@ -175,9 +201,9 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
     }
     break;  //case 1
     
-    case 2:   // состояние ЗАЖАТО. Press
+    case 2:   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. Press
     {
-        if(!ButtonDescr->Sst) // отжата
+        if(!ButtonDescr->Sst) // пїЅпїЅпїЅпїЅпїЅпїЅ
         {
             ButtonDescr->cnt++;
             if(ButtonDescr->cnt > repet_count)
@@ -188,11 +214,11 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
                 //ButtonDescr->EventOff = 1;                     // 4
             }
         }
-        else                  // не отжата
+        else                  // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         {
             ButtonDescr->cnt = 0;
             ButtonDescr->presscnt++;
-            if(ButtonDescr->presscnt > T_press) // > ? с
+            if(ButtonDescr->presscnt > T_press) // > ? пїЅ
             {
                 ButtonDescr->presscnt = 0;
                 //EventPress                                     // 5 
@@ -209,7 +235,7 @@ int Key_State_machine(sButtonDescr *ButtonDescr)
   return temp;
 }
 
-//настройка портов i/o для клавиатур
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ i/o пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //===================================================================================
 void initGPIO_Pads(void)
 {
