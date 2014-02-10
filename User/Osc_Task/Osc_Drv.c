@@ -119,7 +119,7 @@ void InitDAC_TIM_DMA(void)
   RCC->APB1ENR |= 4;
   
   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
-  TIM_TimeBaseInitStruct.TIM_Period = 720-1;//1440;     // ���������� 100 000 ��� � �������(720)  define Fsamples !!!
+  TIM_TimeBaseInitStruct.TIM_Period = 1400 - 1;//720-1;//1440;     // ���������� 100 000 ��� � �������(720)  define Fsamples !!!
   TIM_TimeBaseInitStruct.TIM_Prescaler = 0; 
   TIM_TimeBaseInit(TIM4, &TIM_TimeBaseInitStruct);
   
@@ -668,7 +668,7 @@ void CalcSawtooth(void)
 }
 
 // 16 * 4095 < 2 ^ 16
-#define UNIFORM_SET 16  // do not increase this value
+#define UNIFORM_SET 6  // do not increase this value
 
 // ���������� �������� ���� � ���������� ������� �������������
 //==============================================================================
@@ -756,10 +756,17 @@ void CalcUniform(void)
   for(int i = 0; i < size_of_DAC_Buff/2; i++)
   {
     // random number in range: 0 - 4095  (uniform distribution)
+    //R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6) ^ (R[CurDAC_Ch]>>4) ^ (R[CurDAC_Ch]>>1) ^ R[CurDAC_Ch] ) & 1 ) << 11 ) | (R[CurDAC_Ch] >> 1);
+    
+     // random number in range: 0 - 4095 (uniform distribution)
     R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6) ^ (R[CurDAC_Ch]>>4) ^ (R[CurDAC_Ch]>>1) ^ R[CurDAC_Ch] ) & 1 ) << 11 ) | (R[CurDAC_Ch] >> 1);
     
-    temp = R[CurDAC_Ch] + Offset[CurDAC_Ch];
-    if(temp > 4095) temp = 4095;
+    if(R[CurDAC_Ch] > 4095)
+      temp = 4095;
+    
+    temp = R[CurDAC_Ch];// + Offset[CurDAC_Ch];
+    if(temp > 4095)
+      temp = 4095;
     
     if(CurDAC_Ch == 0)
     {
