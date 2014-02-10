@@ -20,7 +20,7 @@
 // size of p_out must be equal NUMBER_OF_PASS                 !!!
 // to increase performance, no any verifications are doing    !!!
 
-// if round-robin buffer is used size of it must be 255 + IN_SIZE * 2
+// if round-robin buffer is used size of it must be 255 + IN_SIZE * 2 (and IN_SIZE * 2 for output)
 // if round-robin buffer is not used first_half must be false,
 // and first 255 samples may be set to zero
 
@@ -41,6 +41,8 @@ void fir_filter( unsigned int* p_in, unsigned int* p_out, bool first_half )
 
   for( unsigned int i = 0; i < NUMBER_OF_PASS; i++ )
   {	
+	*p_out = 0;
+
     for( unsigned int j = 0; j < N_PLUS_1; j++ )
       *p_out += *p_in++ * *p_coef++; 
 	  
