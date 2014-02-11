@@ -4,6 +4,8 @@
 #define IIR
 #include "iir.h"
 
+#include "string.h"
+
 // number of " 'приложений' фильтра к отсчетам входного сигнала" 
 #define NUMBER_OF_PASS IN_SIZE
 #define M_PLUS_1 (M + 1)

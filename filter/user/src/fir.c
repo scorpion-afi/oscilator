@@ -2,6 +2,7 @@
 // FIR filter implementation
 
 #define FIR
+#define FS_96
 #include "fir.h"
 
 #include <string.h> // to memcpy() using
@@ -41,7 +42,7 @@ void fir_filter( unsigned int* p_in, unsigned int* p_out, bool first_half )
 
   for( unsigned int i = 0; i < NUMBER_OF_PASS; i++ )
   {	
-	*p_out = 0;
+    *p_out = 0;
 
     for( unsigned int j = 0; j < N_PLUS_1; j++ )
       *p_out += *p_in++ * *p_coef++; 

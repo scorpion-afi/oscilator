@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1049350234
+Checksum=-520330966
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -64,10 +64,6 @@ EventSLEEP=0
 Frequency=10000
 Probe0=I0
 ProbeSetup0=2 1 1 2 0 0
-[array_types]
-Fmt0=uint32_t[512]	4	0
-[watch_formats]
-Fmt0={W}0:kyky	4	0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -87,6 +83,11 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[array_types]
+Fmt0=uint32_t[1024]	4	0
+Fmt1=uint32_t[512]	4	0
+[watch_formats]
+Fmt0={W}0:kyky	4	0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -105,9 +106,11 @@ Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\main.c}.53.7" 0 0 1 "" 0 "" 0
-Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\SD_TASK\SD_Task.c}.58.9" 0 0 1 "" 0 "" 0
-Count=2
+Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\SD_TASK\SD_Task.c}.58.9" 0 0 1 "" 0 "" 0
+Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\Osc_Task\Osc_Drv.c}.769.7" 0 0 1 "" 0 "" 0
+Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\Osc_Task\Osc_Drv.c}.765.7" 0 0 1 "" 0 "" 0
+Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\User\Osc_Task\Osc_Drv.c}.783.7" 0 0 1 "" 0 "" 0
+Count=4
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -668,7 +668,7 @@ void CalcSawtooth(void)
 }
 
 // 16 * 4095 < 2 ^ 16
-#define UNIFORM_SET 6  // do not increase this value
+#define UNIFORM_SET 7  // do not increase this value
 
 // ���������� �������� ���� � ���������� ������� �������������
 //==============================================================================
@@ -698,7 +698,7 @@ void CalcGaus(void)
     temp = 0;
       
     // temp can not be greater then 2 ^ 16
-    for( int i = 0; i < UNIFORM_SET; i++ )
+    for( int j = 0; j < UNIFORM_SET; j++ )
     {
       // random number in range: 0 - 4095 (uniform distribution)
       R[CurDAC_Ch] = ( ( ( (R[CurDAC_Ch]>>6) ^ (R[CurDAC_Ch]>>4) ^ (R[CurDAC_Ch]>>1) ^ R[CurDAC_Ch] ) & 1 ) << 11 ) | (R[CurDAC_Ch] >> 1);
@@ -779,7 +779,8 @@ void CalcUniform(void)
       *ptemp++ |= (uint32_t)(temp << 16);     
     }
     
-    if(R[CurDAC_Ch] == 0) R[CurDAC_Ch] = 1; //anti-lock mechanism    
+    if(R[CurDAC_Ch] == 0)
+      R[CurDAC_Ch] = 1; //anti-lock mechanism    
   }    
 }
 

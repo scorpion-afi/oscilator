@@ -138,8 +138,11 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
+
+extern int system_interrupt_cnt;
 void SysTick_Handler(void)
 {
+  system_interrupt_cnt++;
 }
 
 /******************************************************************************/
