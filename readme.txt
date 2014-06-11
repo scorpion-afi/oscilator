@@ -55,3 +55,5 @@ Memory usage:
   35 825 bytes of readwrite data memory   rest =  13 327 bytes
 
 git now is used at home.
+
+git study 1.
